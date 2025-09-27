@@ -14,7 +14,7 @@ Template automates feature maintenance after release: records hotfixes and synch
 - Preserve the structure of existing documents: do not delete sections, do not leave empty headers and hints from templates.
 - All changes should consider requirements from specification and plan, maintaining consistency of terms and references.
 - Actual task state must be reflected in `tasks.md`: do not allow desynchronization between checkboxes and actual state.
-- After making corrections, add the "Instruction execution control" section to each modified document (if it doesn't exist) and mark all checkboxes `[x]`.
+- Ensure all modified documents are complete and properly formatted.
 
 **Automatic update logic**
 
@@ -30,6 +30,6 @@ Template automates feature maintenance after release: records hotfixes and synch
 1. Read `spec.md`, `plan.md`, and `tasks.md` to understand the current feature state.
 2. Form a list of changes that the hotfix should introduce and reflect them in corresponding documents. Maintain unified terms and component references.
 3. Update `tasks.md`: add or adjust tasks, set checkboxes based on actual execution, supplement with verification requirements.
-4. At the end of each modified document, add the self-check block "Instruction execution control" or update the existing one, marking `[x]` for completed requirements.
+4. Ensure all modified documents are complete and ready for implementation.
 
 Write strictly in Markdown. Goal — automatically bring all feature artifacts up to date under the hotfix and synchronize checklists with actual state.

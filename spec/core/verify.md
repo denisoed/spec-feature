@@ -10,11 +10,12 @@ Template helps format the results of automatic task execution verification and m
 **General rules**
 
 - Work only with specification files: do not create code and new directories.
+- **REQUIRED:** Always create `spec/features/{FEATURE}/verify-report.md` file as the main output of verification process.
 - Use `spec/features/{FEATURE}/spec.md`, `plan.md`, and `tasks.md` as source data for verification.
 - Check tasks sequentially: after successful verification, mark the corresponding checkbox in `spec/features/{FEATURE}/tasks.md` as `[x]`; when discrepancies are found, leave `[ ]` and record details in the report file.
 - Save discrepancy logs in `spec/features/{FEATURE}/verify-report.md`, adding new entries with timestamps and brief problem descriptions.
 - If there are no discrepancies, explicitly add an entry "No discrepancies detected" in the appropriate section.
-- Before completing the report, mark self-check checkboxes in the "Instruction execution control" block.
+- Ensure the report is complete and properly formatted.
 
 **What needs to be revealed in the verification document**
 
@@ -24,14 +25,15 @@ Template helps format the results of automatic task execution verification and m
 
 **Steps**
 
-1. Add a comment at the beginning of the result to specify the save path:
+1. **MANDATORY:** Create the verification report file `spec/features/{FEATURE}/verify-report.md` using the template below.
+2. Add a comment at the beginning of the result to specify the save path:
    ```md
    <!-- SAVE_AS: spec/features/{FEATURE}/verify-report.md -->
    ```
-2. Go through tasks in `spec/features/{FEATURE}/tasks.md` in order and update checkboxes according to actual execution status.
-3. Record results in `spec/features/{FEATURE}/verify-report.md` with logs for all tasks (completed and uncompleted).
-4. Check that Markdown is formatted correctly and contains no unfilled placeholders.
-5. Add the "## Instruction execution control" section at the end of the report and mark `[x]` next to each requirement if it's met.
+3. Go through tasks in `spec/features/{FEATURE}/tasks.md` in order and update checkboxes according to actual execution status.
+4. Record results in `spec/features/{FEATURE}/verify-report.md` with logs for all tasks (completed and uncompleted).
+5. Check that Markdown is formatted correctly and contains no unfilled placeholders.
+6. Ensure the report is complete and ready for archiving decision.
 
 **verify-report.md template**
 
@@ -64,11 +66,6 @@ Template helps format the results of automatic task execution verification and m
 - ❌ [Uncompleted component (reason)]
 - ⚠️ [Partially completed component (what remains)]
 
-## Instruction execution control
-
-- [ ] All tasks from `tasks.md` are checked in order and checkboxes are synchronized.
-- [ ] Report reflects discrepancies or records that there are none.
-- [ ] Markdown is formatted without placeholders and ready for saving.
 ```
 
 **Log entry structure:**

@@ -1,0 +1,16 @@
+{
+  "name": "spec-feature",
+  "version": "1.0.1",
+  "bin": {
+    "spec-feature": "./bin/cli.js"
+  },
+  "type": "module",
+  "keywords": [
+    "spec-feature",
+    "spec",
+    "feature",
+    "sdd",
+    "ai",
+    "llm"
+  ]
+}
