@@ -2,7 +2,7 @@
 
 > **Turn your idea into a ready development plan in minutes!**
 
-Spec Feature is your personal assistant for creating technical specifications. Simply describe what you want to build, and get a complete specification, technical plan, and task list for your development team. All documents are created by AI from a single description.
+`Spec Feature` is your personal assistant for creating technical specifications. Simply describe what you want to build, and get a complete specification, technical plan, and task list for your development team. All documents are created by AI from a single description.
 
 ## 🎯 Why use Spec Feature?
 
