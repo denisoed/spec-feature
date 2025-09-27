@@ -9,7 +9,7 @@ Template helps format the feature implementation plan in the **spec-feature** pr
 
 **General rules**
 
-- Work only with specification files: do not create code and new directories.
+- Work only with specification files within `/spec` directory: automatically create necessary directories and files.
 - Use `spec/core/spec.md` as the specification source on which the plan is formed.
 - Use `spec/features/{FEATURE}/spec.md` as additional context. If the file is unavailable, continue working based on **CONTEXT**.
 - Substitute specific values instead of placeholders (`{FEATURE}`, `{CONTEXT}`, etc.). If a section is not applicable — explicitly write `Not required — reason: <explanation>`.
@@ -27,13 +27,11 @@ Template helps format the feature implementation plan in the **spec-feature** pr
 
 **Steps**
 
-1. Start the result with a comment to specify the save path:
-   ```md
-   <!-- SAVE_AS: spec/features/{FEATURE}/plan.md -->
-   ```
+1. Create the directory structure `spec/features/{FEATURE}/` if it doesn't exist.
 2. Form the plan according to the sections above, based on **CONTEXT** and available additional context. For each section, fix what exactly needs to be done, not just list components.
-3. Check that the document contains no unfilled placeholders and that the output is formatted in valid Markdown.
-4. Add the "## Instruction execution control" section from the template below at the end of the document and mark `[x]` for each item if the requirement is met.
+3. Create/update the file `spec/features/{FEATURE}/plan.md` with the complete plan content.
+4. Check that the document contains no unfilled placeholders and that the output is formatted in valid Markdown.
+5. Add the "## Instruction execution control" section from the template below at the end of the document and mark `[x]` for each item if the requirement is met.
 
 **Result template**
 
@@ -59,4 +57,4 @@ Template helps format the feature implementation plan in the **spec-feature** pr
 - [ ] Document is ready for saving and complies with Markdown.
 ```
 
-Write strictly in Markdown and add nothing outside the document. **Goal** — save file `/spec/features/{FEATURE}/plan.md` describing HOW we implement the feature based on **CONTEXT**.
+Write strictly in Markdown and automatically create/update the plan file. **Goal** — create/update file `/spec/features/{FEATURE}/plan.md` describing HOW we implement the feature based on **CONTEXT**.
