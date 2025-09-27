@@ -48,7 +48,7 @@ if (command === "init") {
     }
   });
 
-  console.log(`✅ SpecFeature initialized in '${folderName}' folder!`);
+  console.log(`✅ Spec Feature initialized in '${folderName}' folder!`);
 } else {
   console.log("Usage: npx spec-feature init [folder-name]");
 }
