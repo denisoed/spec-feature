@@ -1,32 +1,32 @@
-<!-- spec-feature: единый запуск -->
+<!-- spec-feature: unified launch -->
 
-Заготовка позволяет за один запрос сформировать полный комплект документов фичи в процессе **spec-feature**.
+Template allows creating a complete set of feature documents in one request during the **spec-feature** process.
 
-**Параметры**
+**Parameters**
 
-- **FEATURE** — название папки, в которой будут сохранены артефакты. Определяется значением между первыми двумя символами `@` (например, `@payments@` → `payments`).
-- **CONTEXT** — подробное описание фичи: цели, функциональные и нефункциональные требования, ограничения, план реализации. Считай всем содержимым после второго `@` в строке параметров; текст может занимать несколько строк и включать списки.
+- **FEATURE** — name of the folder where artifacts will be saved. Determined by the value between the first two `@` symbols (e.g., `@payments@` → `payments`).
+- **CONTEXT** — detailed feature description: goals, functional and non-functional requirements, constraints, implementation plan. Consider everything after the second `@` in the parameter line; text can span multiple lines and include lists.
 
-Параметры передаются одной строкой в формате `@<feature>@ <контекст>` без XML-подобных тегов.
+Parameters are passed in one line in the format `@<feature>@ <context>` without XML-like tags.
 
-**Общие правила**
+**General rules**
 
-- Работай только с файлами спецификаций в каталоге `spec/features/{FEATURE}`: не создавай код и новые каталоги.
-- Если значение **FEATURE** совпадает с уже существующей фичей, обновляй её текущие материалы вместо создания новой папки и при внесении изменений используй шаблон `spec/core/hotfix.md`.
-- В рамках одного запроса сформируй три отдельные Markdown-документа: `spec.md`, `plan.md` и `tasks.md`.
-- Каждый документ начинай с комментария `<!-- SAVE_AS: ... -->`, чтобы указать путь сохранения.
-- Все разделы из шаблонов должны быть заполнены содержанием: не оставляй пустые заголовки, заглушки или комментарии-подсказки.
-- Используй последовательность: сначала спецификация, затем план (опираясь на спецификацию), после чего список задач (опираясь на спецификацию и план).
-- Соблюдай требования KISS, DRY и YAGNI: решения должны быть реализуемыми без излишней сложности и дублирования.
+- Work only with specification files in the `spec/features/{FEATURE}` directory: do not create code and new directories.
+- If the **FEATURE** value matches an already existing feature, update its current materials instead of creating a new folder and use the `spec/core/hotfix.md` template when making changes.
+- Within one request, form three separate Markdown documents: `spec.md`, `plan.md`, and `tasks.md`.
+- Start each document with a `<!-- SAVE_AS: ... -->` comment to specify the save path.
+- All sections from templates must be filled with content: do not leave empty headers, placeholders, or hint comments.
+- Use sequence: first specification, then plan (based on specification), then task list (based on specification and plan).
+- Follow KISS, DRY, and YAGNI requirements: solutions should be implementable without excessive complexity and duplication.
 
-**Шаги**
+**Steps**
 
-1. Подготовь спецификацию `spec/features/{FEATURE}/spec.md` по шаблону из `spec/core/spec.md`, используя **CONTEXT** как первичный контекст.
-2. На основе готовой спецификации и **CONTEXT** сформируй план `spec/features/{FEATURE}/plan.md` по структуре из `spec/core/plan.md`.
-3. Учитывая спецификацию, план и **CONTEXT**, составь список задач `spec/features/{FEATURE}/tasks.md` по требованиям из `spec/core/tasks.md`.
-4. Проверь, что каждый документ оформлен валидным Markdown и не содержит незаполненных разделов.
+1. Prepare specification `spec/features/{FEATURE}/spec.md` using the template from `spec/core/spec.md`, using **CONTEXT** as primary context.
+2. Based on the completed specification and **CONTEXT**, form plan `spec/features/{FEATURE}/plan.md` using the structure from `spec/core/plan.md`.
+3. Considering specification, plan, and **CONTEXT**, compile task list `spec/features/{FEATURE}/tasks.md` according to requirements from `spec/core/tasks.md`.
+4. Check that each document is formatted in valid Markdown and contains no unfilled sections.
 
-**Структура результата**
+**Result structure**
 
 ```md
 <!-- SAVE_AS: spec/features/{FEATURE}/spec.md -->
@@ -37,15 +37,15 @@
 
 <!-- SAVE_AS: spec/features/{FEATURE}/plan.md -->
 
-# План реализации
+# Implementation Plan
 
 ...
 
 <!-- SAVE_AS: spec/features/{FEATURE}/tasks.md -->
 
-# Задачи
+# Tasks
 
 ...
 ```
 
-Пиши строго в Markdown и не добавляй ничего вне трёх документов. **Цель** — подготовить полный комплект материалов фичи (что делаем, как реализуем и какие задачи выполняем) за один запрос на основе **CONTEXT**.
+Write strictly in Markdown and add nothing outside the three documents. **Goal** — prepare a complete set of feature materials (what we do, how we implement, and what tasks we perform) in one request based on **CONTEXT**.

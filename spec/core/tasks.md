@@ -1,66 +1,66 @@
-<!-- spec-feature: список задач -->
+<!-- spec-feature: task list -->
 
-Заготовка помогает сформировать список задач на реализацию фичи в процессе **spec-feature**.
+Template helps form a task list for feature implementation in the **spec-feature** process.
 
-**Параметры**
+**Parameters**
 
-- **FEATURE** — название папки, в которой будет сохранён список задач. Берётся из значения между первыми двумя символами `@` (например, `@payments@` → `payments`).
-- **CONTEXT** — основной контекст для подготовки задач. Считай всем содержимым после второго `@` в строке параметров; контекст может занимать несколько строк и включать дополнительные пояснения.
+- **FEATURE** — name of the folder where the task list will be saved. Taken from the value between the first two `@` symbols (e.g., `@payments@` → `payments`).
+- **CONTEXT** — main context for preparing tasks. Consider everything after the second `@` in the parameter line; context can span multiple lines and include additional clarifications.
 
-**Общие правила**
+**General rules**
 
-- Работай только с файлами спецификаций: не создавай код и новые каталоги.
-- Используй `spec/core/spec.md` и `spec/core/plan.md` как базовые источники спецификации и плана при подготовке задач.
-- Используй `spec/features/{FEATURE}/spec.md` и `spec/features/{FEATURE}/plan.md` как дополнительный контекст. Если какого-то файла нет, продолжай работу, опираясь на доступные материалы и **CONTEXT**.
-- Подставляй конкретные значения вместо заглушек (`{FEATURE}`, `{CONTEXT}` и т.п.). В финальном документе не должно быть подсказок, примеров или маркеров `...`.
-- Каждая задача — это чекбокс с формулировкой результата и описанием обязательных проверок/тестов.
-- Если направление не требуется, явно укажи под соответствующим подзаголовком `Не требуется — причина: <пояснение>`.
-- После заполнения документа отметь чекбоксы самопроверки в разделе «Контроль выполнения инструкций».
+- Work only with specification files: do not create code and new directories.
+- Use `spec/core/spec.md` and `spec/core/plan.md` as base sources of specification and plan when preparing tasks.
+- Use `spec/features/{FEATURE}/spec.md` and `spec/features/{FEATURE}/plan.md` as additional context. If any file is missing, continue working based on available materials and **CONTEXT**.
+- Substitute specific values instead of placeholders (`{FEATURE}`, `{CONTEXT}`, etc.). The final document should not contain hints, examples, or `...` markers.
+- Each task is a checkbox with result formulation and description of mandatory checks/tests.
+- If a direction is not required, explicitly indicate under the corresponding subheading `Not required — reason: <explanation>`.
+- After filling the document, mark self-check checkboxes in the "Instruction execution control" section.
 
-**Что требуется раскрыть в задачах**
+**What needs to be revealed in tasks**
 
-- `## Основные направления` — сгруппируй задачи по ключевым направлениям из **CONTEXT** (API, UI, интеграции, инфраструктура и т.д.). Для каждого направления выдели отдельный подзаголовок и перечисли задачи внутри него.
-- `## Поддерживающие задачи` — документация, наблюдаемость, качество и другие сквозные активности. Если пункт не нужен, замени его пояснением, почему можно обойтись без него.
-- `## Definition of Done` — критерии завершения фичи: тесты, документация и прочие обязательные условия.
+- `## Main directions` — group tasks by key directions from **CONTEXT** (API, UI, integrations, infrastructure, etc.). For each direction, allocate a separate subheading and list tasks within it.
+- `## Supporting tasks` — documentation, observability, quality, and other cross-cutting activities. If an item is not needed, replace it with an explanation of why it can be omitted.
+- `## Definition of Done` — feature completion criteria: tests, documentation, and other mandatory conditions.
 
-**Шаги**
+**Steps**
 
-1. Добавь в начало результата комментарий для указания пути сохранения:
+1. Add a comment at the beginning of the result to specify the save path:
    ```md
    <!-- SAVE_AS: spec/features/{FEATURE}/tasks.md -->
    ```
-2. Сформируй список задач по разделам выше, опираясь на **CONTEXT** и доступный дополнительный контекст.
-3. Убедись, что задачи покрывают реализацию, проверку и выпуск фичи. Итоговый Markdown не должен содержать незаполненных заглушек.
-4. Зафиксируй в разделе `## Definition of Done`, что запуск `/spec/core/verify.md` выполняется после выполнения всех задач, чтобы исполнители сделали это автоматически по завершении списка.
-5. Добавь в конец документа раздел «## Контроль выполнения инструкций» из шаблона и отметь все чекбоксы `[x]`, если условие выполнено.
+2. Form the task list according to the sections above, based on **CONTEXT** and available additional context.
+3. Ensure that tasks cover implementation, verification, and release of the feature. The final Markdown should not contain unfilled placeholders.
+4. Record in the `## Definition of Done` section that `/spec/core/verify.md` execution is performed after completing all tasks, so executors do this automatically upon completion of the list.
+5. Add the "## Instruction execution control" section from the template at the end of the document and mark all checkboxes `[x]` if the condition is met.
 
-**Шаблон результата**
+**Result template**
 
 ```md
-# Задачи
+# Tasks
 
-**Контекст:** {CONTEXT}
+**Context:** {CONTEXT}
 
-## Основные направления
+## Main directions
 
-## Поддерживающие задачи
+## Supporting tasks
 
-- [ ] Документация: обновить релевантные инструкции и описания.
-- [ ] Наблюдаемость: добавить или уточнить метрики, алерты и/или логирование.
-- [ ] Code review и PR: подготовить изменения к ревью и сопроводительную информацию.
+- [ ] Documentation: update relevant instructions and descriptions.
+- [ ] Observability: add or clarify metrics, alerts, and/or logging.
+- [ ] Code review and PR: prepare changes for review and accompanying information.
 
 ## Definition of Done
 
-- [ ] Все задачи выполнены и протестированы.
-- [ ] Релевантные unit/e2e/интеграционные тесты проходят успешно.
-- [ ] Документация и операционные инструкции обновлены.
-- [ ] `/spec/core/verify.md` выполнен после завершения всех задач для проверки списка задач.
+- [ ] All tasks are completed and tested.
+- [ ] Relevant unit/e2e/integration tests pass successfully.
+- [ ] Documentation and operational instructions are updated.
+- [ ] `/spec/core/verify.md` is executed after completing all tasks to verify the task list.
 
-## Контроль выполнения инструкций
+## Instruction execution control
 
-- [ ] Все направления и задачи сформулированы чекбоксами с критериями приёмки.
-- [ ] Нет пустых разделов: для неактуальных направлений добавлено пояснение «Не требуется — причина».
-- [ ] Definition of Done содержит ссылку на запуск `/spec/core/verify.md`.
+- [ ] All directions and tasks are formulated as checkboxes with acceptance criteria.
+- [ ] No empty sections: for irrelevant directions, explanation "Not required — reason" is added.
+- [ ] Definition of Done contains a link to launch `/spec/core/verify.md`.
 ```
 
-Пиши строго в Markdown, не добавляй ничего вне документа и не приступай к выполнению задач без отдельного запроса. **Цель** — сохранить файл `/spec/features/{FEATURE}/tasks.md` со списком того, ЧТО делаем и как проверяем результат, на основе **CONTEXT** и подготовленных материалов.
+Write strictly in Markdown, add nothing outside the document, and do not proceed to task execution without a separate request. **Goal** — save file `/spec/features/{FEATURE}/tasks.md` with a list of WHAT we do and how we verify the result, based on **CONTEXT** and prepared materials.

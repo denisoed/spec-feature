@@ -1,35 +1,35 @@
-<!-- spec-feature: хотфикс фичи -->
+<!-- spec-feature: feature hotfix -->
 
-Шаблон автоматизирует сопровождение фичи после релиза: фиксирует горячие исправления и синхронно обновляет артефакты **spec-feature** (спеку, план и задачи).
+Template automates feature maintenance after release: records hotfixes and synchronously updates **spec-feature** artifacts (spec, plan, and tasks).
 
-**Параметры**
+**Parameters**
 
-- **FEATURE** — название папки с артефактами фичи. Определяется значением между первыми двумя символами `@` (например, `@billing@` → `billing`).
-- **CONTEXT** — суть хотфикса и ожидаемый результат. Это всё, что передаётся после второго `@`; допускается многострочное описание с ссылками на инциденты или PR.
+- **FEATURE** — name of the folder with feature artifacts. Determined by the value between the first two `@` symbols (e.g., `@billing@` → `billing`).
+- **CONTEXT** — essence of the hotfix and expected result. This is everything passed after the second `@`; multi-line descriptions with links to incidents or PRs are allowed.
 
-**Общие правила**
+**General rules**
 
-- Работай только в каталоге `spec/features/{FEATURE}/`: разрешено редактировать `spec.md`, `plan.md` и `tasks.md`.
-- Не создавай в папке фичи новые файлы (включая `hotfix.md` и отчёты проверки).
-- Сохраняй структуру существующих документов: не удаляй разделы, не оставляй пустых заголовков и подсказок из шаблонов.
-- Все изменения должны учитывать требования из спецификации и плана, поддерживая консистентность терминов и ссылок.
-- Фактическое состояние задач обязательно отражай в `tasks.md`: не допускай рассинхрона между чекбоксами и фактическим состоянием.
-- После внесения правок добавь в каждый изменённый документ раздел «Контроль выполнения инструкций» (если его нет) и отметь все чекбоксы `[x]`.
+- Work only in the `spec/features/{FEATURE}/` directory: allowed to edit `spec.md`, `plan.md`, and `tasks.md`.
+- Do not create new files in the feature folder (including `hotfix.md` and verification reports).
+- Preserve the structure of existing documents: do not delete sections, do not leave empty headers and hints from templates.
+- All changes should consider requirements from specification and plan, maintaining consistency of terms and references.
+- Actual task state must be reflected in `tasks.md`: do not allow desynchronization between checkboxes and actual state.
+- After making corrections, add the "Instruction execution control" section to each modified document (if it doesn't exist) and mark all checkboxes `[x]`.
 
-**Логика автоматических обновлений**
+**Automatic update logic**
 
-- `spec.md` — обнови разделы, на которые влияет хотфикс: уточни пользовательские сценарии, правила или нефункциональные требования, добавь новые Assumptions при появлении открытых вопросов.
-- `plan.md` — скорректируй технические решения: источники данных, контракты, архитектурные ограничения и риски, чтобы план отражал текущее устройство фичи.
+- `spec.md` — update sections affected by the hotfix: clarify user scenarios, rules, or non-functional requirements, add new Assumptions when open questions arise.
+- `plan.md` — adjust technical solutions: data sources, contracts, architectural constraints, and risks, so the plan reflects the current feature structure.
 - `tasks.md` —
-  - Добавь новые чекбоксы для работ, требуемых хотфиксом, сгруппируй их в подходящие разделы. Названия начинай с префикса `hotfix_<дата>` в формате `YYYY-MM-DD`.
-  - Обнови статусы существующих задач (`[ ]`/`[x]`), учитывая фактическое выполнение и результаты хотфикса.
-  - Для каждой задачи укажи необходимые проверки: тесты, ручные сценарии, обновление документации.
+  - Add new checkboxes for work required by the hotfix, group them in appropriate sections. Names should start with prefix `hotfix_<date>` in `YYYY-MM-DD` format.
+  - Update statuses of existing tasks (`[ ]`/`[x]`), considering actual execution and hotfix results.
+  - For each task, specify necessary checks: tests, manual scenarios, documentation updates.
 
-**Шаги**
+**Steps**
 
-1. Прочитай `spec.md`, `plan.md` и `tasks.md`, чтобы понять текущее состояние фичи.
-2. Сформируй перечень изменений, которые должен внести хотфикс, и отрази их в соответствующих документах. Поддерживай единые термины и ссылки на компоненты.
-3. Обнови `tasks.md`: добавь или скорректируй задачи, выстави чекбоксы по факту выполнения, дополни требованиями к проверкам.
-4. В конце каждого изменённого документа добавь блок самопроверки «Контроль выполнения инструкций» либо обнови существующий, проставив `[x]` для выполненных требований.
+1. Read `spec.md`, `plan.md`, and `tasks.md` to understand the current feature state.
+2. Form a list of changes that the hotfix should introduce and reflect them in corresponding documents. Maintain unified terms and component references.
+3. Update `tasks.md`: add or adjust tasks, set checkboxes based on actual execution, supplement with verification requirements.
+4. At the end of each modified document, add the self-check block "Instruction execution control" or update the existing one, marking `[x]` for completed requirements.
 
-Пиши строго в Markdown. Цель — автоматически привести в актуальное состояние все артефакты фичи под хотфикс и синхронизировать чек-листы с фактическим состоянием.
+Write strictly in Markdown. Goal — automatically bring all feature artifacts up to date under the hotfix and synchronize checklists with actual state.

@@ -1,83 +1,83 @@
-<!-- spec-feature: проверка задач -->
+<!-- spec-feature: task verification -->
 
-Заготовка помогает оформить результаты автоматической проверки выполнения задач и принять решение об архивировании фичи в процессе **spec-feature**.
+Template helps format the results of automatic task execution verification and make a decision about feature archiving in the **spec-feature** process.
 
-**Параметры**
+**Parameters**
 
-- **FEATURE** — название папки, в которой будет сохранён отчёт проверки. Берётся из значения между первыми двумя символами `@` (например, `@payments@` → `payments`).
-- **CONTEXT** — основной контекст и цель проверки. Считай всем содержимым после второго `@` в строке параметров; контекст может занимать несколько строк и включать дополнительные пояснения.
+- **FEATURE** — name of the folder where the verification report will be saved. Taken from the value between the first two `@` symbols (e.g., `@payments@` → `payments`).
+- **CONTEXT** — main context and verification purpose. Consider everything after the second `@` in the parameter line; context can span multiple lines and include additional clarifications.
 
-**Общие правила**
+**General rules**
 
-- Работай только с файлами спецификаций: не создавай код и новые каталоги.
-- Используй `spec/features/{FEATURE}/spec.md`, `plan.md` и `tasks.md` как исходные данные для проверки.
-- Проверяй задачи последовательно: после успешной проверки помечай соответствующий чекбокс в `spec/features/{FEATURE}/tasks.md` как `[x]`; при обнаружении несоответствий оставляй `[ ]` и фиксируй подробности в отчётном файле.
-- Логи несоответствий сохраняй в `spec/features/{FEATURE}/verify-report.md`, добавляя новые записи с временной меткой и кратким описанием проблемы.
-- Если несоответствий нет, явно добавь запись «Несоответствий не обнаружено» в соответствующем разделе.
-- Перед завершением отчёта отметь чекбоксы самопроверки в блоке «Контроль выполнения инструкций».
+- Work only with specification files: do not create code and new directories.
+- Use `spec/features/{FEATURE}/spec.md`, `plan.md`, and `tasks.md` as source data for verification.
+- Check tasks sequentially: after successful verification, mark the corresponding checkbox in `spec/features/{FEATURE}/tasks.md` as `[x]`; when discrepancies are found, leave `[ ]` and record details in the report file.
+- Save discrepancy logs in `spec/features/{FEATURE}/verify-report.md`, adding new entries with timestamps and brief problem descriptions.
+- If there are no discrepancies, explicitly add an entry "No discrepancies detected" in the appropriate section.
+- Before completing the report, mark self-check checkboxes in the "Instruction execution control" block.
 
-**Что требуется раскрыть в документе проверки**
+**What needs to be revealed in the verification document**
 
-- `## Результаты проверки задач` — список проверенных задач с итоговым статусом и ссылками на подтверждающие артефакты/пруфы.
-- `## Журнал несоответствий` — краткое резюме новых записей, добавленных в `verify-report.md`, с указанием шагов для устранения проблем.
-- `## Решение по архивированию` — финальный статус запуска verify: перенос фичи в `spec/archived/{FEATURE}` либо перечень действий для повторной проверки.
+- `## Task verification results` — list of verified tasks with final status and links to supporting artifacts/proofs.
+- `## Discrepancy log` — brief summary of new entries added to `verify-report.md`, with steps to resolve problems.
+- `## Archiving decision` — final status of verify launch: moving feature to `spec/archived/{FEATURE}` or list of actions for re-verification.
 
-**Шаги**
+**Steps**
 
-1. В начале результата добавь комментарий для указания пути сохранения:
+1. Add a comment at the beginning of the result to specify the save path:
    ```md
    <!-- SAVE_AS: spec/features/{FEATURE}/verify-report.md -->
    ```
-2. Пройдись по задачам в `spec/features/{FEATURE}/tasks.md` в порядке их следования и обнови чекбоксы согласно фактическому статусу выполнения.
-3. Зафиксируй результаты в `spec/features/{FEATURE}/verify-report.md` с логами по всем задачам (выполненным и невыполненным).
-4. Проверь, что Markdown оформлен корректно и не содержит незаполненных заглушек.
-5. В конце отчёта добавь раздел «## Контроль выполнения инструкций» и отметь `[x]` напротив каждого требования, если оно выполнено.
+2. Go through tasks in `spec/features/{FEATURE}/tasks.md` in order and update checkboxes according to actual execution status.
+3. Record results in `spec/features/{FEATURE}/verify-report.md` with logs for all tasks (completed and uncompleted).
+4. Check that Markdown is formatted correctly and contains no unfilled placeholders.
+5. Add the "## Instruction execution control" section at the end of the report and mark `[x]` next to each requirement if it's met.
 
-**Шаблон verify-report.md**
+**verify-report.md template**
 
 ```md
 # Verify Report - {FEATURE}
 
-**Дата:** YYYY-MM-DD  
-**Контекст:** {CONTEXT}
+**Date:** YYYY-MM-DD  
+**Context:** {CONTEXT}
 
-## Лог несоответствий
+## Discrepancy log
 
-### YYYY-MM-DD - [Описание общего статуса]
+### YYYY-MM-DD - [General status description]
 
-#### 1. [Название проблемы]
+#### 1. [Problem name]
 
-**Проблема:** [Описание проблемы]  
-**Статус:** [Критичность: критично/не критично/низкий приоритет]  
-**Действие:** [Что нужно сделать]
+**Problem:** [Problem description]  
+**Status:** [Criticality: critical/not critical/low priority]  
+**Action:** [What needs to be done]
 
-#### 2. [Следующая проблема]
+#### 2. [Next problem]
 
 ...
 
-### YYYY-MM-DD - Положительные результаты
+### YYYY-MM-DD - Positive results
 
-#### Полностью реализованные компоненты:
+#### Fully implemented components:
 
-- ✅ [Компонент 1 (путь к файлу)]
-- ✅ [Компонент 2 (путь к файлу)]
-- ❌ [Невыполненный компонент (причина)]
-- ⚠️ [Частично выполненный компонент (что осталось)]
+- ✅ [Component 1 (file path)]
+- ✅ [Component 2 (file path)]
+- ❌ [Uncompleted component (reason)]
+- ⚠️ [Partially completed component (what remains)]
 
-## Контроль выполнения инструкций
+## Instruction execution control
 
-- [ ] Все задачи из `tasks.md` проверены по порядку и чекбоксы синхронизированы.
-- [ ] В отчёте отражены несоответствия или зафиксировано, что их нет.
-- [ ] Markdown оформлен без заглушек и готов к сохранению.
+- [ ] All tasks from `tasks.md` are checked in order and checkboxes are synchronized.
+- [ ] Report reflects discrepancies or records that there are none.
+- [ ] Markdown is formatted without placeholders and ready for saving.
 ```
 
-**Структура записей в логе:**
+**Log entry structure:**
 
-- **Дата и общий статус** — группировка по времени проверки
-- **Проблемы** — нумерованный список с указанием проблемы, статуса критичности и требуемых действий
-- **Положительные результаты** — список выполненных задач с эмодзи-статусами:
-  - ✅ — полностью выполнено
-  - ❌ — не выполнено
-  - ⚠️ — частично выполнено
+- **Date and general status** — grouping by verification time
+- **Problems** — numbered list with problem indication, criticality status, and required actions
+- **Positive results** — list of completed tasks with emoji statuses:
+  - ✅ — fully completed
+  - ❌ — not completed
+  - ⚠️ — partially completed
 
-Пиши строго в Markdown и не добавляй ничего вне документа. **Цель** — проверить все задачи в `spec/features/{FEATURE}/tasks.md`, отметить галочками выполненные в файле задач, создать подробный отчёт `verify-report.md` с логами всех задач и их статусов, или рекомендовать перенос фичи в `spec/archived/{FEATURE}`, если все задачи прошли.
+Write strictly in Markdown and add nothing outside the document. **Goal** — verify all tasks in `spec/features/{FEATURE}/tasks.md`, mark completed ones in the task file, create a detailed report `verify-report.md` with logs of all tasks and their statuses, or recommend moving the feature to `spec/archived/{FEATURE}` if all tasks passed.

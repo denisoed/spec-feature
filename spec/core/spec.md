@@ -1,58 +1,58 @@
-<!-- spec-feature: спецификация -->
+<!-- spec-feature: specification -->
 
-Заготовка помогает описать фичу перед реализацией в процессе **spec-feature**.
+Template helps describe a feature before implementation in the **spec-feature** process.
 
-**Параметры**
+**Parameters**
 
-- **FEATURE** — название папки, в которой будет сохранена спецификация. Берётся из значения между первыми двумя символами `@` (например, `@payments@` → `payments`).
-- **CONTEXT** — основной контекст для описания фичи. Считай всем содержимым после второго `@` в строке параметров; контекст может занимать несколько строк и включать дополнительные пояснения.
+- **FEATURE** — name of the folder where the specification will be saved. Taken from the value between the first two `@` symbols (e.g., `@payments@` → `payments`).
+- **CONTEXT** — main context for describing the feature. Consider everything after the second `@` in the parameter line; context can span multiple lines and include additional clarifications.
 
-**Общие правила**
+**General rules**
 
-- Работай только с файлами спецификаций: не создавай код и новые каталоги.
-- Подставляй конкретные значения вместо заглушек (`{FEATURE}`, `{CONTEXT}` и т.п.). В финальном документе не должно быть подсказок, примеров или маркеров `...`.
-- Заголовок спецификации должен содержать понятное название фичи (при необходимости адаптируй значение **FEATURE**).
-- Структуру из шаблона ниже нужно заполнить содержанием: тезисы, списки и таблицы допускаются, пустые разделы — нет.
-- Если данных для раздела недостаточно, явно пиши `Нет данных — нужно уточнить: <что именно>` вместо пустого заголовка.
-- Перед завершением документа выполни самопроверку и отметь чекбоксы в разделе «Контроль выполнения инструкций».
+- Work only with specification files: do not create code and new directories.
+- Substitute specific values instead of placeholders (`{FEATURE}`, `{CONTEXT}`, etc.). The final document should not contain hints, examples, or `...` markers.
+- The specification header should contain a clear feature name (adapt the **FEATURE** value if necessary).
+- The structure from the template below needs to be filled with content: theses, lists, and tables are allowed, empty sections are not.
+- If there's insufficient data for a section, explicitly write `No data — needs clarification: <what exactly>` instead of an empty header.
+- Before completing the document, perform self-check and mark checkboxes in the "Instruction execution control" section.
 
-**Что требуется раскрыть в спецификации**
+**What needs to be revealed in the specification**
 
-- `## User Stories` — минимум три завершённые истории. У каждой фиксируй роль, действие и результат/ценность.
-- `## Основные сценарии и правила` — ключевые сценарии использования, ограничения, варианты ошибок.
-- `## Нефункциональные требования` — SLA, производительность, безопасность, локализация, доступность и другие нефункциональные критерии.
-- `## Assumptions` — явные предположения и вопросы, которые нужно уточнить до разработки.
+- `## User Stories` — minimum three completed stories. For each, fix the role, action, and result/value.
+- `## Main scenarios and rules` — key usage scenarios, constraints, error variants.
+- `## Non-functional requirements` — SLA, performance, security, localization, accessibility, and other non-functional criteria.
+- `## Assumptions` — explicit assumptions and questions that need clarification before development.
 
-**Шаги**
+**Steps**
 
-1. В начале результата вставь комментарий для указания пути сохранения:
+1. Insert a comment at the beginning of the result to specify the save path:
    ```md
    <!-- SAVE_AS: spec/features/{FEATURE}/spec.md -->
    ```
-2. Сформируй спецификацию по разделам выше, опираясь на **CONTEXT** и доступный дополнительный контекст.
-3. Проверь, что документ оформлен в Markdown и не содержит незаполненных заглушек.
-4. В конце документа добавь раздел «## Контроль выполнения инструкций» с чекбоксами из шаблона и отметь каждый пункт `[x]`, если условие выполнено.
+2. Form the specification according to the sections above, based on **CONTEXT** and available additional context.
+3. Check that the document is formatted in Markdown and contains no unfilled placeholders.
+4. Add the "## Instruction execution control" section with checkboxes from the template at the end of the document and mark each item `[x]` if the condition is met.
 
-**Шаблон результата**
+**Result template**
 
 ```md
 # {FEATURE}
 
-**Спецификация:** {CONTEXT}
+**Specification:** {CONTEXT}
 
 ## User Stories
 
-## Основные сценарии и правила
+## Main scenarios and rules
 
-## Нефункциональные требования
+## Non-functional requirements
 
 ## Assumptions
 
-## Контроль выполнения инструкций
+## Instruction execution control
 
-- [ ] Структура шаблона полностью сохранена, каждый раздел заполнен содержанием или пометкой «Нет данных — нужно уточнить».
-- [ ] Контекст из **CONTEXT** отражён во всех разделах.
-- [ ] Документ готов к сохранению и не содержит служебных подсказок.
+- [ ] Template structure is fully preserved, each section is filled with content or marked "No data — needs clarification".
+- [ ] Context from **CONTEXT** is reflected in all sections.
+- [ ] Document is ready for saving and contains no service hints.
 ```
 
-Пиши строго в Markdown и не добавляй ничего вне документа. **Цель** — сохранить файл `/spec/features/{FEATURE}/spec.md` с описанием того, ЧТО делаем и ЗАЧЕМ, на основе **CONTEXT**.
+Write strictly in Markdown and add nothing outside the document. **Goal** — save file `/spec/features/{FEATURE}/spec.md` describing WHAT we do and WHY, based on **CONTEXT**.
