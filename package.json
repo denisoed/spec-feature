@@ -1,0 +1,8 @@
+{
+  "name": "spec-feature",
+  "version": "1.0.0",
+  "bin": {
+    "spec-feature": "./bin/cli.js"
+  },
+  "type": "module"
+}
