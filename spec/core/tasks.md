@@ -30,7 +30,7 @@ Template helps form a task list for feature implementation in the **spec-feature
 3. Create/update the file `spec/features/{FEATURE}/tasks.md` with the complete task list content.
 4. Ensure that tasks cover implementation, verification, and release of the feature. The final Markdown should not contain unfilled placeholders.
 5. Record in the `## Definition of Done` section that `/spec/core/verify.md` execution is performed after completing all tasks, so executors do this automatically upon completion of the list.
-6. Add the "## Instruction execution control" section from the template at the end of the document and mark all checkboxes `[x]` if the condition is met.
+6. Ensure the document is complete and ready for implementation.
 
 **Result template**
 
@@ -54,11 +54,6 @@ Template helps form a task list for feature implementation in the **spec-feature
 - [ ] Documentation and operational instructions are updated.
 - [ ] `/spec/core/verify.md` is executed after completing all tasks to verify the task list.
 
-## Instruction execution control
-
-- [ ] All directions and tasks are formulated as checkboxes with acceptance criteria.
-- [ ] No empty sections: for irrelevant directions, explanation "Not required — reason" is added.
-- [ ] Definition of Done contains a link to launch `/spec/core/verify.md`.
 ```
 
 Write strictly in Markdown and automatically create/update the task list file. Do not proceed to task execution without a separate request. **Goal** — create/update file `/spec/features/{FEATURE}/tasks.md` with a list of WHAT we do and how we verify the result, based on **CONTEXT** and prepared materials.

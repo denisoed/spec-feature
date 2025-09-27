@@ -15,7 +15,7 @@ Template helps format the feature implementation plan in the **spec-feature** pr
 - Substitute specific values instead of placeholders (`{FEATURE}`, `{CONTEXT}`, etc.). If a section is not applicable — explicitly write `Not required — reason: <explanation>`.
 - Form meaningful paragraphs or lists: do not leave empty headers, hint comments, and `...` markers.
 - Follow basic software development principles: KISS, DRY, and YAGNI, so solutions remain simple, without duplication and unnecessary logic.
-- After completing the sections, mark checkboxes in the "Instruction execution control" block.
+- Ensure all sections are complete and properly formatted.
 
 **What needs to be revealed in the plan**
 
@@ -31,7 +31,7 @@ Template helps format the feature implementation plan in the **spec-feature** pr
 2. Form the plan according to the sections above, based on **CONTEXT** and available additional context. For each section, fix what exactly needs to be done, not just list components.
 3. Create/update the file `spec/features/{FEATURE}/plan.md` with the complete plan content.
 4. Check that the document contains no unfilled placeholders and that the output is formatted in valid Markdown.
-5. Add the "## Instruction execution control" section from the template below at the end of the document and mark `[x]` for each item if the requirement is met.
+5. Ensure the document is complete and ready for implementation.
 
 **Result template**
 
@@ -50,11 +50,6 @@ Template helps format the feature implementation plan in the **spec-feature** pr
 
 ## Assumptions
 
-## Instruction execution control
-
-- [ ] All sections are filled with specific actions or marked "Not required — reason".
-- [ ] Plan considers specification and source context.
-- [ ] Document is ready for saving and complies with Markdown.
 ```
 
 Write strictly in Markdown and automatically create/update the plan file. **Goal** — create/update file `/spec/features/{FEATURE}/plan.md` describing HOW we implement the feature based on **CONTEXT**.

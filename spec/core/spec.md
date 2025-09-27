@@ -14,7 +14,7 @@ Template helps describe a feature before implementation in the **spec-feature** 
 - The specification header should contain a clear feature name (adapt the **FEATURE** value if necessary).
 - The structure from the template below needs to be filled with content: theses, lists, and tables are allowed, empty sections are not.
 - If there's insufficient data for a section, explicitly write `No data — needs clarification: <what exactly>` instead of an empty header.
-- Before completing the document, perform self-check and mark checkboxes in the "Instruction execution control" section.
+- Ensure all sections are complete and properly formatted.
 
 **What needs to be revealed in the specification**
 
@@ -29,7 +29,7 @@ Template helps describe a feature before implementation in the **spec-feature** 
 2. Form the specification according to the sections above, based on **CONTEXT** and available additional context.
 3. Create/update the file `spec/features/{FEATURE}/spec.md` with the complete specification content.
 4. Check that the document is formatted in Markdown and contains no unfilled placeholders.
-5. Add the "## Instruction execution control" section with checkboxes from the template at the end of the document and mark each item `[x]` if the condition is met.
+5. Ensure the document is complete and ready for implementation.
 
 **Result template**
 
@@ -46,11 +46,6 @@ Template helps describe a feature before implementation in the **spec-feature** 
 
 ## Assumptions
 
-## Instruction execution control
-
-- [ ] Template structure is fully preserved, each section is filled with content or marked "No data — needs clarification".
-- [ ] Context from **CONTEXT** is reflected in all sections.
-- [ ] Document is ready for saving and contains no service hints.
 ```
 
 Write strictly in Markdown and automatically create/update the specification file. **Goal** — create/update file `/spec/features/{FEATURE}/spec.md` describing WHAT we do and WHY, based on **CONTEXT**.
