@@ -2,6 +2,26 @@
 
 SpecFeature helps you create feature specifications automatically. Just describe what you want to build, and it generates a complete specification, technical plan, and task list for your development team. All documents are created by AI from a single description.
 
+## Why use SpecFeature?
+
+### **Clearer starting point**
+The specification becomes the single source of truth — you guess less about what you intended to build.
+
+### **Fewer misunderstandings between human and AI**
+Clear "contracts" / specifications help avoid "vibe coding" — when AI "guesses" your intention and often builds something not quite what you need.
+
+### **Architecture and decisions are documented**
+"Why did we choose this solution?" will be captured in the specification / constitution, not in emails, chats, or someone's head.
+
+### **Controlled task breakdown**
+Small tasks are easier to review, test, and correct — fewer "big commits that are hard to understand".
+
+### **Flexibility and evolution**
+Specifications are not "dead" — they can be updated, refactored, and revised when requirements change.
+
+### **AI assistant integration**
+Specification + plan + tasks gives AI "context" and boundaries within which it can generate code more safely.
+
 ## Installation
 
 ### Using npx (recommended)
