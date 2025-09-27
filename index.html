@@ -113,7 +113,22 @@
 #demo::before{background:radial-gradient(600px 280px at 20% 10%, rgba(124,58,237,.12), transparent 60%),radial-gradient(700px 300px at 100% 0%, rgba(34,211,238,.12), transparent 60%);} 
 #install::before{background:radial-gradient(800px 360px at 50% -10%, rgba(255,255,255,.06), transparent 65%);} 
 #faq::before{background:radial-gradient(700px 320px at 50% -10%, rgba(124,58,237,.10), transparent 60%);} 
-</style>
+  /* Chess (alternating) layout for solution */
+    .chess{display:grid;gap:28px}
+    .chess .row{display:grid;grid-template-columns:1.05fr .95fr;gap:20px;align-items:center}
+    .chess .piece{background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:18px}
+    .chess .row:nth-child(even) .piece:first-child{order:2}
+    .chess .row:nth-child(even) .piece:last-child{order:1}
+    @media (max-width:1020px){.chess .row{grid-template-columns:1fr}.chess .row .piece{order:initial}}
+    .num{display:inline-flex;align-items:center;gap:8px;font-weight:900;color:#dfe2f2}
+    .num .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--brand),#5b21b6)}
+    .tip{margin-top:10px;border:1px dashed rgba(255,255,255,.18);border-radius:12px;padding:10px;color:var(--muted)}
+    .mini-list{display:grid;gap:6px;margin-top:8px}
+    .mini-list .item{display:flex;gap:8px;align-items:flex-start}
+    .mini-list .tick{flex:0 0 18px;height:18px;border-radius:6px;background:linear-gradient(135deg,#22c55e,#16a34a)}
+    .kbd{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.03);font-weight:700}
+  .chess .row.onecol{grid-template-columns:1fr}
+  </style>
 </head>
 <body>
   <div class="progress" id="progress"></div>
@@ -196,42 +211,78 @@
     <section id="solution">
       <div class="container">
         <h2>The solution, step‑by‑step</h2>
-        <p class="sub">A guided, logical flow that mirrors how real teams build: define → design → deliver → verify.</p>
-        <div class="steps" role="tablist" aria-label="How it works">
-          <button class="step-btn" role="tab" aria-selected="true" aria-controls="p1" id="t1">1) Describe</button>
-          <button class="step-btn" role="tab" aria-selected="false" aria-controls="p2" id="t2">2) Generate</button>
-          <button class="step-btn" role="tab" aria-selected="false" aria-controls="p3" id="t3">3) Execute & Verify</button>
-        </div>
-        <div class="grid cols-2">
-          <div class="card step-panel active" id="p1" role="tabpanel" aria-labelledby="t1">
-            <h3>Describe once</h3>
-            <p class="sub">Use <strong>spec/feature.md</strong> and pass <span class="input" style="padding:2px 8px;border-radius:8px">@&lt;feature&gt;@ &lt;context&gt;</span>. This becomes your single source of truth.</p>
-            <pre><code>Use the template from spec/feature.md.
+        <p class="sub">A practical, human flow that maps to real delivery: <strong>Describe</strong> → <strong>Generate</strong> → <strong>Execute & Verify</strong>.</p>
+
+        <div class="chess">
+          <!-- Row 1: Describe (combined) -->
+          <div class="row onecol">
+            <div class="piece">
+              <div class="num"><span class="dot"></span> <span>01 · Describe</span></div>
+              <h3 style="margin:10px 0 6px">Describe once — no second guessing</h3>
+              <p class="sub">Use <strong>spec/feature.md</strong> and pass <span class="kbd">@&lt;feature&gt;@ &lt;context&gt;</span>. This becomes your single source of truth.</p>
+              <div class="mini-list">
+                <div class="item"><span class="tick"></span><p>Clear scope & boundaries for humans and AI</p></div>
+                <div class="item"><span class="tick"></span><p>Decisions live next to the work — not in chats</p></div>
+                <div class="item"><span class="tick"></span><p>Zero "vibe coding" — explicit intent only</p></div>
+              </div>
+              <div class="tip">Tip: keep <em>constraints</em> and <em>non‑goals</em> in the context. It prevents accidental features.</div>
+
+              <div class="window" style="margin-top:12px">
+                <div class="bar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span></div>
+                <div class="row" style="align-items:center;justify-content:space-between;padding:10px 12px">
+                  <div style="font-weight:800">Input example</div>
+                  <button class="copy" data-copy="Use the template from spec/feature.md.
+@user-auth@ Users register, login, reset password; integrate with notifications.">Copy</button>
+                </div>
+                <pre><code>Use the template from spec/feature.md.
 @user-auth@ Users register, login, reset password; integrate with notifications.</code></pre>
+              </div>
+            </div>
           </div>
-          <div class="card step-panel" id="p2" role="tabpanel" aria-labelledby="t2">
-            <h3>Generate artifacts</h3>
-            <p class="sub">AI creates three Markdown docs in <strong>/spec/features/&lt;feature&gt;</strong>: spec, plan, tasks.</p>
-            <pre><code>spec/features/user-auth/
+
+          <!-- Row 2: Generate -->
+          <div class="row">
+            <div class="piece">
+              <div class="window">
+                <div class="bar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span></div>
+                <pre><code>spec/features/user-auth/
 ├── spec.md   # value & scenarios
 ├── plan.md   # technical design
 └── tasks.md  # implementation checklist</code></pre>
+              </div>
+            </div>
+            <div class="piece">
+              <div class="num"><span class="dot"></span> <span>02 · Generate</span></div>
+              <h3 style="margin:10px 0 6px">Generate artifacts — ready to execute</h3>
+              <p class="sub">AI creates three Markdown docs in <strong>/spec/features/&lt;feature&gt;</strong>. These are living documents you can refactor.</p>
+              <div class="mini-list">
+                <div class="item"><span class="tick"></span><p><strong>spec.md</strong> — value, scope, user stories</p></div>
+                <div class="item"><span class="tick"></span><p><strong>plan.md</strong> — architecture & trade‑offs</p></div>
+                <div class="item"><span class="tick"></span><p><strong>tasks.md</strong> — small, verifiable steps</p></div>
+              </div>
+              <p class="sub" style="margin-top:10px">Output path: <span class="kbd">spec/features/&lt;feature&gt;/</span></p>
+            </div>
           </div>
-          <div class="card step-panel" id="p3" role="tabpanel" aria-labelledby="t3">
-            <h3>Execute & verify</h3>
-            <p class="sub">Work through tasks; then run <em>verify.md</em> to compare implementation against the spec and plan. A <em>verify-report.md</em> is produced.</p>
-            <pre><code>Execute all tasks in spec/features/user-auth/tasks.md
+
+          <!-- Row 3: Execute & Verify -->
+          <div class="row">
+            <div class="piece">
+              <div class="num"><span class="dot"></span> <span>03 · Execute & Verify</span></div>
+              <h3 style="margin:10px 0 6px">Execute tasks, then verify automatically</h3>
+              <p class="sub">Work through <strong>tasks.md</strong>; when done, run <strong>verify.md</strong> to compare implementation against the spec and plan. A <strong>verify-report.md</strong> is produced.</p>
+              <div class="mini-list">
+                <div class="item"><span class="tick"></span><p>Sequential execution with visible progress</p></div>
+                <div class="item"><span class="tick"></span><p>✅ / ❌ status per task with recommendations</p></div>
+                <div class="item"><span class="tick"></span><p>Confidence to ship — no hidden gaps</p></div>
+              </div>
+            </div>
+            <div class="piece">
+              <div class="window">
+                <div class="bar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span></div>
+<pre><code>Execute all tasks in spec/features/user-auth/tasks.md
 → Run verification via spec/core/verify.md
 → Get verify-report.md with ✅ / ❌ and recommendations</code></pre>
-          </div>
-          <div class="card">
-            <h3>Templates ready to go</h3>
-            <ul class="list" style="margin-top:8px">
-              <li class="li"><span class="icon i-ok"></span><p><strong>spec.md</strong> — value, scope, user stories</p></li>
-              <li class="li"><span class="icon i-ok"></span><p><strong>plan.md</strong> — architecture, decisions, trade‑offs</p></li>
-              <li class="li"><span class="icon i-ok"></span><p><strong>tasks.md</strong> — small, verifiable steps</p></li>
-              <li class="li"><span class="icon i-ok"></span><p><strong>verify.md</strong> — automated checks & report</p></li>
-            </ul>
+            </div>
           </div>
         </div>
       </div>
