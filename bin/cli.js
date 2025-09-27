@@ -12,6 +12,8 @@ const command = args[0];
 
 if (command === "init") {
   const targetDir = process.cwd();
+  const folderName = args[1] || "spec"; // Use provided folder name or default to "spec"
+  const destinationDir = path.join(targetDir, folderName);
   const templatesDir = path.join(__dirname, "../spec");
 
   function copyRecursive(src, dest) {
@@ -29,19 +31,24 @@ if (command === "init") {
     }
   }
 
+  // Create the destination directory if it doesn't exist
+  if (!fs.existsSync(destinationDir)) {
+    fs.mkdirSync(destinationDir, { recursive: true });
+  }
+
   fs.readdirSync(templatesDir).forEach(file => {
     const src = path.join(templatesDir, file);
-    const dest = path.join(targetDir, file);
+    const dest = path.join(destinationDir, file);
 
     if (!fs.existsSync(dest)) {
       copyRecursive(src, dest);
-      console.log(`Created: ${file}`);
+      console.log(`Created: ${folderName}/${file}`);
     } else {
-      console.log(`Skipped (already exists): ${file}`);
+      console.log(`Skipped (already exists): ${folderName}/${file}`);
     }
   });
 
-  console.log("✅ SpecFeature initialized!");
+  console.log(`✅ SpecFeature initialized in '${folderName}' folder!`);
 } else {
-  console.log("Usage: npx spec-feature init");
+  console.log("Usage: npx spec-feature init [folder-name]");
 }
