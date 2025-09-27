@@ -14,13 +14,28 @@ if (command === "init") {
   const targetDir = process.cwd();
   const templatesDir = path.join(__dirname, "../spec");
 
+  function copyRecursive(src, dest) {
+    const stat = fs.statSync(src);
+    
+    if (stat.isDirectory()) {
+      if (!fs.existsSync(dest)) {
+        fs.mkdirSync(dest, { recursive: true });
+      }
+      fs.readdirSync(src).forEach(file => {
+        copyRecursive(path.join(src, file), path.join(dest, file));
+      });
+    } else {
+      fs.copyFileSync(src, dest);
+    }
+  }
+
   fs.readdirSync(templatesDir).forEach(file => {
     const src = path.join(templatesDir, file);
     const dest = path.join(targetDir, file);
 
     if (!fs.existsSync(dest)) {
-      fs.copyFileSync(src, dest);
-      console.log(`Created file: ${file}`);
+      copyRecursive(src, dest);
+      console.log(`Created: ${file}`);
     } else {
       console.log(`Skipped (already exists): ${file}`);
     }
