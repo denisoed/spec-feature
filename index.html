@@ -113,7 +113,21 @@
 #demo::before{background:radial-gradient(600px 280px at 20% 10%, rgba(124,58,237,.12), transparent 60%),radial-gradient(700px 300px at 100% 0%, rgba(34,211,238,.12), transparent 60%);} 
 #install::before{background:radial-gradient(800px 360px at 50% -10%, rgba(255,255,255,.06), transparent 65%);} 
 #faq::before{background:radial-gradient(700px 320px at 50% -10%, rgba(124,58,237,.10), transparent 60%);} 
-</style>
+  /* Chess (alternating) layout for solution */
+    .chess{display:grid;gap:28px}
+    .chess .row{display:grid;grid-template-columns:1.05fr .95fr;gap:20px;align-items:center}
+    .chess .piece{background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:18px}
+    .chess .row:nth-child(even) .piece:first-child{order:2}
+    .chess .row:nth-child(even) .piece:last-child{order:1}
+    @media (max-width:1020px){.chess .row{grid-template-columns:1fr}.chess .row .piece{order:initial}}
+    .num{display:inline-flex;align-items:center;gap:8px;font-weight:900;color:#dfe2f2}
+    .num .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--brand),#5b21b6)}
+    .tip{margin-top:10px;border:1px dashed rgba(255,255,255,.18);border-radius:12px;padding:10px;color:var(--muted)}
+    .mini-list{display:grid;gap:6px;margin-top:8px}
+    .mini-list .item{display:flex;gap:8px;align-items:flex-start}
+    .mini-list .tick{flex:0 0 18px;height:18px;border-radius:6px;background:linear-gradient(135deg,#22c55e,#16a34a)}
+    .kbd{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.03);font-weight:700}
+  </style>
 </head>
 <body>
   <div class="progress" id="progress"></div>
@@ -225,29 +239,50 @@
               </div>
             </div>
           </div>
-          <div class="card step-panel" id="p2" role="tabpanel" aria-labelledby="t2">
-            <h3>Generate artifacts</h3>
-            <p class="sub">AI creates three Markdown docs in <strong>/spec/features/&lt;feature&gt;</strong>: spec, plan, tasks.</p>
-            <pre><code>spec/features/user-auth/
+
+          <!-- Row 2: Generate -->
+          <div class="row">
+            <div class="piece">
+              <div class="window">
+                <div class="bar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span></div>
+                <pre><code>spec/features/user-auth/
 ├── spec.md   # value & scenarios
 ├── plan.md   # technical design
 └── tasks.md  # implementation checklist</code></pre>
+              </div>
+            </div>
+            <div class="piece">
+              <div class="num"><span class="dot"></span> <span>02 · Generate</span></div>
+              <h3 style="margin:10px 0 6px">Generate artifacts — ready to execute</h3>
+              <p class="sub">AI creates three Markdown docs in <strong>/spec/features/&lt;feature&gt;</strong>. These are living documents you can refactor.</p>
+              <div class="mini-list">
+                <div class="item"><span class="tick"></span><p><strong>spec.md</strong> — value, scope, user stories</p></div>
+                <div class="item"><span class="tick"></span><p><strong>plan.md</strong> — architecture & trade‑offs</p></div>
+                <div class="item"><span class="tick"></span><p><strong>tasks.md</strong> — small, verifiable steps</p></div>
+              </div>
+              <p class="sub" style="margin-top:10px">Output path: <span class="kbd">spec/features/&lt;feature&gt;/</span></p>
+            </div>
           </div>
-          <div class="card step-panel" id="p3" role="tabpanel" aria-labelledby="t3">
-            <h3>Execute & verify</h3>
-            <p class="sub">Work through tasks; then run <em>verify.md</em> to compare implementation against the spec and plan. A <em>verify-report.md</em> is produced.</p>
-            <pre><code>Execute all tasks in spec/features/user-auth/tasks.md
+
+          <!-- Row 3: Execute & Verify -->
+          <div class="row">
+            <div class="piece">
+              <div class="num"><span class="dot"></span> <span>03 · Execute & Verify</span></div>
+              <h3 style="margin:10px 0 6px">Execute tasks, then verify automatically</h3>
+              <p class="sub">Work through <strong>tasks.md</strong>; when done, run <strong>verify.md</strong> to compare implementation against the spec and plan. A <strong>verify-report.md</strong> is produced.</p>
+              <div class="mini-list">
+                <div class="item"><span class="tick"></span><p>Sequential execution with visible progress</p></div>
+                <div class="item"><span class="tick"></span><p>✅ / ❌ status per task with recommendations</p></div>
+                <div class="item"><span class="tick"></span><p>Confidence to ship — no hidden gaps</p></div>
+              </div>
+            </div>
+            <div class="piece">
+              <div class="window">
+                <div class="bar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span></div>
+<pre><code>Execute all tasks in spec/features/user-auth/tasks.md
 → Run verification via spec/core/verify.md
 → Get verify-report.md with ✅ / ❌ and recommendations</code></pre>
-          </div>
-          <div class="card">
-            <h3>Templates ready to go</h3>
-            <ul class="list" style="margin-top:8px">
-              <li class="li"><span class="icon i-ok"></span><p><strong>spec.md</strong> — value, scope, user stories</p></li>
-              <li class="li"><span class="icon i-ok"></span><p><strong>plan.md</strong> — architecture, decisions, trade‑offs</p></li>
-              <li class="li"><span class="icon i-ok"></span><p><strong>tasks.md</strong> — small, verifiable steps</p></li>
-              <li class="li"><span class="icon i-ok"></span><p><strong>verify.md</strong> — automated checks & report</p></li>
-            </ul>
+            </div>
           </div>
         </div>
       </div>
