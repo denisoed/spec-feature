@@ -196,18 +196,34 @@
     <section id="solution">
       <div class="container">
         <h2>The solution, step‑by‑step</h2>
-        <p class="sub">A guided, logical flow that mirrors how real teams build: define → design → deliver → verify.</p>
-        <div class="steps" role="tablist" aria-label="How it works">
-          <button class="step-btn" role="tab" aria-selected="true" aria-controls="p1" id="t1">1) Describe</button>
-          <button class="step-btn" role="tab" aria-selected="false" aria-controls="p2" id="t2">2) Generate</button>
-          <button class="step-btn" role="tab" aria-selected="false" aria-controls="p3" id="t3">3) Execute & Verify</button>
-        </div>
-        <div class="grid cols-2">
-          <div class="card step-panel active" id="p1" role="tabpanel" aria-labelledby="t1">
-            <h3>Describe once</h3>
-            <p class="sub">Use <strong>spec/feature.md</strong> and pass <span class="input" style="padding:2px 8px;border-radius:8px">@&lt;feature&gt;@ &lt;context&gt;</span>. This becomes your single source of truth.</p>
-            <pre><code>Use the template from spec/feature.md.
-@user-auth@ Users register, login, reset password; integrate with notifications.</code></pre>
+        <p class="sub">A practical, human flow that maps to real delivery: <strong>Describe</strong> → <strong>Generate</strong> → <strong>Execute & Verify</strong>.</p>
+
+        <div class="chess">
+          <!-- Row 1: Describe -->
+          <div class="row">
+            <div class="piece">
+              <div class="num"><span class="dot"></span> <span>01 · Describe</span></div>
+              <h3 style="margin:10px 0 6px">Describe once — no second guessing</h3>
+              <p class="sub">Use <strong>spec/feature.md</strong> and pass <span class="kbd">#&lt;feature&gt;# &lt;context&gt;</span>. This becomes your single source of truth.</p>
+              <div class="mini-list">
+                <div class="item"><span class="tick"></span><p>Clear scope & boundaries for humans and AI</p></div>
+                <div class="item"><span class="tick"></span><p>Decisions live next to the work — not in chats</p></div>
+                <div class="item"><span class="tick"></span><p>Zero "vibe coding" — explicit intent only</p></div>
+              </div>
+              <div class="tip">Tip: keep <em>constraints</em> and <em>non‑goals</em> in the context. It prevents accidental features.</div>
+            </div>
+            <div class="piece">
+              <div class="window">
+                <div class="bar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span></div>
+                <div class="row" style="align-items:center;justify-content:space-between;padding:10px 12px">
+                  <div style="font-weight:800">Input example</div>
+                  <button class="copy" data-copy="Use the template from spec/feature.md.
+#user-auth# Users register, login, reset password; integrate with notifications.">Copy</button>
+                </div>
+                <pre><code>Use the template from spec/feature.md.
+#user-auth# Users register, login, reset password; integrate with notifications.</code></pre>
+              </div>
+            </div>
           </div>
           <div class="card step-panel" id="p2" role="tabpanel" aria-labelledby="t2">
             <h3>Generate artifacts</h3>
@@ -255,7 +271,7 @@
               <button class="copy" id="copyInput">Copy</button>
             </div>
             <pre id="demoInput"><code>Use the template from spec/feature.md.
-@feature@ Your context here...</code></pre>
+#feature# Your context here...</code></pre>
           </div>
           <div class="window" style="margin-top:10px">
             <div class="bar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span></div>
@@ -330,7 +346,7 @@ spec-feature init my-features</code></pre>
         <div class="grid cols-2">
           <details open>
             <summary>How do I start a new feature?</summary>
-            <p>Open <strong>spec/feature.md</strong> in your AI assistant and pass <span class="input" style="padding:2px 8px;border-radius:8px">@&lt;feature&gt;@ &lt;context&gt;</span>.</p>
+            <p>Open <strong>spec/feature.md</strong> in your AI assistant and pass <span class="input" style="padding:2px 8px;border-radius:8px">#&lt;feature&gt;# &lt;context&gt;</span>.</p>
           </details>
           <details>
             <summary>Can I update specs later?</summary>
@@ -420,7 +436,7 @@ spec-feature init my-features</code></pre>
       const name = raw.toLowerCase().replace(/[^a-z0-9-]+/gi,'-');
       const ctx = (fCtx.value || 'Your context here...').trim();
       const input = `Use the template from spec/feature.md.
-@${name}@ ${ctx}`;
+#${name}# ${ctx}`;
       const path = `spec/features/${name}/ (spec.md, plan.md, tasks.md)`;
       demoInput.textContent = input; demoPath.textContent = path;
       copyInput.setAttribute('data-copy', input);

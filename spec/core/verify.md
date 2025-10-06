@@ -4,8 +4,8 @@ Template helps format the results of automatic task execution verification and m
 
 **Parameters**
 
-- **FEATURE** — name of the folder where the verification report will be saved. Taken from the value between the first two `@` symbols (e.g., `@payments@` → `payments`).
-- **CONTEXT** — main context and verification purpose. Consider everything after the second `@` in the parameter line; context can span multiple lines and include additional clarifications.
+- **FEATURE** — name of the folder where the verification report will be saved. Taken from the value between the first two `#` symbols (e.g., `#payments#` → `payments`).
+- **CONTEXT** — main context and verification purpose. Consider everything after the second `#` in the parameter line; context can span multiple lines and include additional clarifications.
 
 **General rules**
 

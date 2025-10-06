@@ -4,8 +4,8 @@ Template automates feature maintenance after release: records hotfixes and synch
 
 **Parameters**
 
-- **FEATURE** — name of the folder with feature artifacts. Determined by the value between the first two `@` symbols (e.g., `@billing@` → `billing`).
-- **CONTEXT** — essence of the hotfix and expected result. This is everything passed after the second `@`; multi-line descriptions with links to incidents or PRs are allowed.
+- **FEATURE** — name of the folder with feature artifacts. Determined by the value between the first two `#` symbols (e.g., `#billing#` → `billing`).
+- **CONTEXT** — essence of the hotfix and expected result. This is everything passed after the second `#`; multi-line descriptions with links to incidents or PRs are allowed.
 
 **General rules**
 

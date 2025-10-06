@@ -4,8 +4,8 @@ Template helps describe a feature before implementation in the **spec-feature** 
 
 **Parameters**
 
-- **FEATURE** — name of the folder where the specification will be saved. Taken from the value between the first two `@` symbols (e.g., `@payments@` → `payments`).
-- **CONTEXT** — main context for describing the feature. Consider everything after the second `@` in the parameter line; context can span multiple lines and include additional clarifications.
+- **FEATURE** — name of the folder where the specification will be saved. Taken from the value between the first two `#` symbols (e.g., `#payments#` → `payments`).
+- **CONTEXT** — main context for describing the feature. Consider everything after the second `#` in the parameter line; context can span multiple lines and include additional clarifications.
 
 **General rules**
 

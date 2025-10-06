@@ -4,10 +4,10 @@ Template allows creating a complete set of feature documents in one request duri
 
 **Parameters**
 
-- **FEATURE** — name of the folder where artifacts will be saved. Determined by the value between the first two `@` symbols (e.g., `@payments@` → `payments`).
-- **CONTEXT** — detailed feature description: goals, functional and non-functional requirements, constraints, implementation plan. Consider everything after the second `@` in the parameter line; text can span multiple lines and include lists.
+- **FEATURE** — name of the folder where artifacts will be saved. Determined by the value between the first two `#` symbols (e.g., `#payments#` → `payments`).
+- **CONTEXT** — detailed feature description: goals, functional and non-functional requirements, constraints, implementation plan. Consider everything after the second `#` in the parameter line; text can span multiple lines and include lists.
 
-Parameters are passed in one line in the format `@<feature>@ <context>` without XML-like tags.
+Parameters are passed in one line in the format `#<feature># <context>` without XML-like tags.
 
 **General rules**
 

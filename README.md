@@ -111,16 +111,16 @@ To create a feature specification, use the `spec/feature.md` template with any A
 
 ### 📝 Input parameter format
 
-Pass parameters in one line in the format `@<feature>@ <context>`:
+Pass parameters in one line in the format `#<feature># <context>`:
 
-- the value between the first two `@` symbols is used as **FEATURE** and determines the feature folder (`@payments@` → `spec/features/payments`);
-- everything following the second `@` is **CONTEXT**. It can span multiple lines, include lists, links, and additional clarifications.
+- the value between the first two `#` symbols is used as **FEATURE** and determines the feature folder (`#payments#` → `spec/features/payments`);
+- everything following the second `#` is **CONTEXT**. It can span multiple lines, include lists, links, and additional clarifications.
 
 ### 🚀 Usage example
 
 ```
 Use the template from spec/feature.md.
-@user-auth@ Need to add user authentication via email and password. The user should be able to register, log in, and recover their password. Integration with the existing notification system is mandatory.
+#user-auth# Need to add user authentication via email and password. The user should be able to register, log in, and recover their password. Integration with the existing notification system is mandatory.
 ```
 
 ### ✨ What happens next
@@ -179,7 +179,7 @@ To update an existing feature, reuse `spec/feature.md`, specifying the name of t
 **📝 Update example:**
 ```
 Use the template from spec/feature.md.
-@user-auth@ Add two-factor authentication (2FA) via SMS. The user should be able to enable/disable 2FA in profile settings. Integration with existing SMS provider.
+#user-auth# Add two-factor authentication (2FA) via SMS. The user should be able to enable/disable 2FA in profile settings. Integration with existing SMS provider.
 ```
 
 The AI assistant will correctly overwrite `spec.md`, `plan.md`, and `tasks.md`, preserving the structure and updating the content for new requirements.
@@ -189,7 +189,7 @@ The AI assistant will correctly overwrite `spec.md`, `plan.md`, and `tasks.md`, 
 ### 🚨 Common problems and solutions
 
 **❌ Problem:** AI assistant doesn't create feature folder
-- **✅ Solution:** Make sure you're using the correct format `@feature@ context` and that the assistant has file creation permissions
+- **✅ Solution:** Make sure you're using the correct format `#feature# context` and that the assistant has file creation permissions
 
 **❌ Problem:** Tasks are executed in wrong order
 - **✅ Solution:** Check task numbering in `tasks.md` and reorder if necessary
