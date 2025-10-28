@@ -48,6 +48,8 @@ graph TD
 
 ## 🎬 Workflow
 
+**Send these prompts to your AI assistant** (Claude, Cursor, Copilot, etc.) to create, execute, and update features.
+
 ### 1️⃣ Create Feature
 
 ```
