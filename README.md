@@ -20,7 +20,7 @@ npx spec-feature init
 npx spec-feature init my-project-docs
 ```
 
-Creates a `spec` folder with complete structure ready to use.
+Creates the Spec Feature structure inside `spec/` by default, or inside the folder name you provide.
 
 ## 📁 Structure
 
