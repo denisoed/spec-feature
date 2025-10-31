@@ -10,6 +10,7 @@ Template helps format the feature implementation plan in the **spec-feature** pr
 **General rules**
 
 - Work only with specification files within `/spec` directory: automatically create necessary directories and files.
+- Do not generate application code, configuration snippets, scripts, or patches while preparing the implementation plan.
 - Use `spec/core/spec.md` as the specification source on which the plan is formed.
 - Use `spec/features/{FEATURE}/spec.md` as additional context. If the file is unavailable, continue working based on **CONTEXT**.
 - Substitute specific values instead of placeholders (`{FEATURE}`, `{CONTEXT}`, etc.). If a section is not applicable — explicitly write `Not required — reason: <explanation>`.

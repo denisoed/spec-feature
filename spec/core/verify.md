@@ -10,6 +10,7 @@ Template helps format the results of automatic task execution verification and m
 **General rules**
 
 - Work only with specification files: do not create code and new directories.
+- Do not generate application code, configuration snippets, scripts, or patches during verification.
 - **REQUIRED:** Always create `spec/features/{FEATURE}/verify-report.md` file as the main output of verification process.
 - Use `spec/features/{FEATURE}/spec.md`, `plan.md`, and `tasks.md` as source data for verification.
 - Check tasks sequentially: after successful verification, mark the corresponding checkbox in `spec/features/{FEATURE}/tasks.md` as `[x]`; when discrepancies are found, leave `[ ]` and record details in the report file.

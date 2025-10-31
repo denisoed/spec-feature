@@ -10,6 +10,7 @@ Template helps describe a feature before implementation in the **spec-feature** 
 **General rules**
 
 - Work only with specification files within `/spec` directory: automatically create necessary directories and files.
+- Do not generate application code, configuration snippets, scripts, or patches while preparing the specification.
 - Substitute specific values instead of placeholders (`{FEATURE}`, `{CONTEXT}`, etc.). The final document should not contain hints, examples, or `...` markers.
 - The specification header should contain a clear feature name (adapt the **FEATURE** value if necessary).
 - The structure from the template below needs to be filled with content: theses, lists, and tables are allowed, empty sections are not.
