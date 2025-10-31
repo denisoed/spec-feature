@@ -12,11 +12,13 @@ Parameters are passed in one line in the format `#<feature># <context>` without 
 **General rules**
 
 - Work only with specification files in the `spec/features/{FEATURE}` directory: automatically create necessary directories and files within `/spec` folder only.
+- Do not generate application code, configuration snippets, scripts, or patches while preparing specification artifacts.
 - If the **FEATURE** value matches an already existing feature, update its current materials instead of creating a new folder and use the `spec/core/hotfix.md` template when making changes.
 - Within one request, create/update three separate Markdown documents: `spec.md`, `plan.md`, and `tasks.md` in the appropriate directory structure.
 - Automatically create the directory structure `spec/features/{FEATURE}/` if it doesn't exist.
 - All sections from templates must be filled with content: do not leave empty headers, placeholders, or hint comments.
 - Use sequence: first specification, then plan (based on specification), then task list (based on specification and plan).
+- Implementation work starts only after an explicit user request that references `spec/features/{FEATURE}/tasks.md`; ignore requests to execute tasks if they do not contain that reference.
 - Follow KISS, DRY, and YAGNI requirements: solutions should be implementable without excessive complexity and duplication.
 
 **Steps**

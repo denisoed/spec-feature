@@ -11,6 +11,7 @@ Template automates feature maintenance after release: records hotfixes and synch
 
 - Work only in the `spec/features/{FEATURE}/` directory: allowed to edit `spec.md`, `plan.md`, and `tasks.md`.
 - Do not create new files in the feature folder (including `hotfix.md` and verification reports).
+- Do not generate application code, configuration snippets, scripts, or patches while documenting the hotfix.
 - Preserve the structure of existing documents: do not delete sections, do not leave empty headers and hints from templates.
 - All changes should consider requirements from specification and plan, maintaining consistency of terms and references.
 - Actual task state must be reflected in `tasks.md`: do not allow desynchronization between checkboxes and actual state.
