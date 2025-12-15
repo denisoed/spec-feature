@@ -23,6 +23,7 @@ Template automates feature maintenance after release: records hotfixes and synch
 
 - `spec.md` — update sections affected by the hotfix: clarify user scenarios, rules, or non-functional requirements, add new Assumptions when open questions arise.
 - `plan.md` — adjust technical solutions: data sources, contracts, architectural constraints, and risks, so the plan reflects the current feature structure.
+- `clarifications.md` — if `spec/features/{FEATURE}/clarifications.md` already exists and the hotfix introduces new open questions, append them there (do not overwrite user answers). If it does not exist, record open questions as assumptions in `spec.md` (this template forbids creating new files).
 - `tasks.md` —
   - Add new checkboxes for work required by the hotfix, group them in appropriate sections. Names should start with prefix `hotfix_<date>` in `YYYY-MM-DD` format.
   - Update statuses of existing tasks (`[ ]`/`[x]`), considering actual execution and hotfix results.
