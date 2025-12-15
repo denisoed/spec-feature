@@ -22,6 +22,20 @@ npx spec-feature init my-project-docs
 
 Creates the Spec Feature structure inside `spec/` by default, or inside the folder name you provide.
 
+### View specs in browser
+
+```bash
+# Start viewer (default folder: spec)
+npx spec-feature view
+
+# Start viewer for a specific feature and/or custom folder
+npx spec-feature view <feature-slug> --folder my-docs
+```
+
+- Opens a local web viewer at `http://localhost:4173/`.
+- If `<feature-slug>` exists under `spec/features/`, the viewer jumps directly to it; otherwise you land on the feature list.
+- Pass `--folder|-f` when your specs live outside the default `spec/` directory.
+
 ## 📁 Structure
 
 ```mermaid

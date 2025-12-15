@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spec Feature Viewer</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        pre, code, kbd, samp { font-family: 'JetBrains Mono', monospace; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 overflow-hidden">
+    <div id="root"></div>
+    <!-- spec-feature:config:inject -->
+
+    <script type="text/babel">
+        const { useState, useMemo, useEffect } = React;
+
+        const CONFIG = window.SPEC_FEATURE_CONFIG || { folderName: "spec", targetFeature: "" };
+
+        // --- ICONS (Lucide Replacements for Standalone HTML) ---
+        const IconBase = ({ size = 24, className = "", children, ...props }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>{children}</svg>
+        );
+
+        const FileText = (p) => <IconBase {...p}><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></IconBase>;
+        const MenuIcon = (p) => <IconBase {...p}><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></IconBase>;
+        const X = (p) => <IconBase {...p}><path d="M18 6 6 18"/><path d="m6 6 18 12"/></IconBase>;
+        const Copy = (p) => <IconBase {...p}><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></IconBase>;
+        const Check = (p) => <IconBase {...p}><polyline points="20 6 9 17 4 12"/></IconBase>;
+        const CodeIcon = (p) => <IconBase {...p}><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></IconBase>;
+        const Eye = (p) => <IconBase {...p}><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></IconBase>;
+        const ChevronRight = (p) => <IconBase {...p}><path d="m9 18 6-6-6-6"/></IconBase>;
+        const ChevronLeft = (p) => <IconBase {...p}><path d="m15 18-6-6 6-6"/></IconBase>;
+        const ShieldCheck = (p) => <IconBase {...p}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></IconBase>;
+        const ListTodo = (p) => <IconBase {...p}><rect x="3" y="5" width="6" height="6" rx="1" /><path d="m3 17 2 2 4-4" /><path d="M13 6h8" /><path d="M13 12h8" /><path d="M13 18h8" /></IconBase>;
+        const MapIcon = (p) => <IconBase {...p}><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21" /><line x1="9" x2="9" y1="3" y2="18" /><line x1="15" x2="15" y1="6" y2="21" /></IconBase>;
+        const BookOpen = (p) => <IconBase {...p}><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" /><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" /></IconBase>;
+        const GitGraph = (p) => <IconBase {...p}><circle cx="5" cy="6" r="3" /><path d="M5 9v6" /><circle cx="5" cy="18" r="3" /><path d="M12 3v18" /><circle cx="19" cy="6" r="3" /><path d="M19 9v6" /><circle cx="19" cy="18" r="3" /></IconBase>;
+        const ExternalLink = (p) => <IconBase {...p}><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" x2="21" y1="14" y2="3" /></IconBase>;
+        const Grid = (p) => <IconBase {...p}><rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" /></IconBase>;
+        const FolderGit = (p) => <IconBase {...p}><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 2H4a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2Z"/><circle cx="12" cy="13" r="2"/><path d="M12 10v1"/><path d="M12 15v2"/></IconBase>;
+
+        // --- DATA FETCHING ---
+        const fetchFeatures = async () => {
+            const res = await fetch('/api/features');
+            if (!res.ok) {
+                throw new Error(`Failed to load features (${res.status})`);
+            }
+            return res.json();
+        };
+
+        // --- UTILS ---
+        const calculateProgress = (files) => {
+            const tasksFile = files.find(f => f.type === 'tasks');
+            if (!tasksFile) return { completed: 0, total: 0, percentage: 0 };
+            
+            const completed = (tasksFile.content.match(/- \[x\]/g) || []).length;
+            const pending = (tasksFile.content.match(/- \[ \]/g) || []).length;
+            const total = completed + pending;
+            
+            return {
+                completed,
+                total,
+                percentage: total === 0 ? 0 : Math.round((completed / total) * 100)
+            };
+        };
+
+        // --- COMPONENTS ---
+
+        const MermaidBlock = ({ content }) => (
+            <div className="my-6 border border-slate-200 rounded-lg bg-slate-50 overflow-hidden">
+                <div className="bg-slate-100 px-4 py-2 border-b border-slate-200 flex items-center gap-2 text-xs font-mono text-slate-500">
+                    <GitGraph size={14} className="text-blue-500" />
+                    <span>Mermaid Diagram</span>
+                </div>
+                <div className="p-4 font-mono text-xs text-slate-600 bg-white whitespace-pre overflow-x-auto">
+                    {content}
+                </div>
+                <div className="bg-slate-50 px-4 py-2 text-[10px] text-slate-400 border-t border-slate-200 text-center">
+                    Diagram visualization would render here
+                </div>
+            </div>
+        );
+
+        const LinkRenderer = ({ text, onNavigate }) => {
+            const fileRegex = /(spec\.md|plan\.md|tasks\.md|verify-report\.md)/g;
+            const parts = text.split(fileRegex);
+            if (parts.length === 1) return <span className="text-slate-600">{text}</span>;
+            return (
+                <span className="text-slate-600">
+                    {parts.map((part, i) => {
+                        if (part.match(fileRegex)) {
+                            let targetId = 'spec';
+                            if (part.includes('plan')) targetId = 'plan';
+                            if (part.includes('tasks')) targetId = 'tasks';
+                            if (part.includes('verify')) targetId = 'verify';
+                            return (
+                                <button key={i} onClick={() => onNavigate(targetId)} className="inline-flex items-center gap-0.5 px-1.5 py-0.5 -my-1 mx-0.5 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded text-sm font-medium transition-colors cursor-pointer" title={`Go to ${part}`}>
+                                    {part} <ExternalLink size={10} />
+                                </button>
+                            );
+                        }
+                        return part;
+                    })}
+                </span>
+            );
+        };
+
+        const SmartMarkdownRenderer = ({ content, onNavigate }) => {
+            const lines = content.split('\n');
+            let inCodeBlock = false;
+            let codeBlockContent = [];
+            let codeBlockLang = '';
+            const renderLines = [];
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                if (line.trim().startsWith('```')) {
+                    if (inCodeBlock) {
+                        if (codeBlockLang === 'mermaid') {
+                            renderLines.push(<MermaidBlock key={`mermaid-${i}`} content={codeBlockContent.join('\n')} />);
+                        } else {
+                            renderLines.push(<div key={`code-${i}`} className="my-4 p-4 bg-slate-100 rounded-md font-mono text-sm text-slate-700 overflow-x-auto border border-slate-200">{codeBlockContent.join('\n')}</div>);
+                        }
+                        inCodeBlock = false; codeBlockContent = []; codeBlockLang = '';
+                    } else {
+                        inCodeBlock = true; codeBlockLang = line.replace('```', '').trim();
+                    }
+                    continue;
+                }
+                if (inCodeBlock) { codeBlockContent.push(line); continue; }
+                if (line.startsWith('# ')) renderLines.push(<h1 key={i} className="text-2xl font-bold text-slate-900 mb-6 pb-2 border-b border-slate-200">{line.replace('# ', '')}</h1>);
+                else if (line.startsWith('## ')) renderLines.push(<h2 key={i} className="text-lg font-bold text-slate-800 mt-8 mb-3 flex items-center gap-2">{line.replace('## ', '')}</h2>);
+                else if (line.startsWith('### ')) renderLines.push(<h3 key={i} className="text-md font-semibold text-slate-700 mt-6 mb-2">{line.replace('### ', '')}</h3>);
+                else if (line.trim().startsWith('- [ ]') || line.trim().startsWith('- [x]')) {
+                    const isChecked = line.trim().startsWith('- [x]');
+                    const text = line.replace(/- \[[x ]\] /, '');
+                    renderLines.push(
+                        <div key={i} className="flex items-start gap-3 py-1 ml-1 group">
+                            <div className={`mt-1 w-4 h-4 rounded border flex items-center justify-center shrink-0 ${isChecked ? 'bg-green-500 border-green-500 text-white' : 'border-slate-300 bg-white'}`}>
+                                {isChecked && <Check size={12} strokeWidth={3} />}
+                            </div>
+                            <span className={`${isChecked ? 'text-slate-400 line-through' : 'text-slate-700'}`}>
+                                {text.split('**').map((part, idx) => idx % 2 === 1 ? <strong key={idx} className="font-semibold text-slate-900">{part}</strong> : part)}
+                            </span>
+                        </div>
+                    );
+                }
+                else if (line.startsWith('- ')) renderLines.push(<li key={i} className="ml-5 list-disc text-slate-700 pl-1">{line.replace('- ', '').replace(/\*\*(.*?)\*\*/g, (match, p1) => p1)}</li>);
+                else if (/^\d+\. /.test(line)) renderLines.push(<div key={i} className="ml-5 text-slate-700 flex gap-2"><span className="font-mono text-slate-400 font-bold w-4 text-right">{line.split('.')[0]}.</span> {line.replace(/^\d+\. /, '')}</div>);
+                else if (line.trim() === '') renderLines.push(<div key={i} className="h-2"></div>);
+                else renderLines.push(<p key={i} className="leading-relaxed"><LinkRenderer text={line} onNavigate={onNavigate} /></p>);
+            }
+            return <div className="space-y-1">{renderLines}</div>;
+        };
+
+        const FileIcon = ({ type }) => {
+            switch (type) {
+                case 'spec': return <BookOpen size={18} className="text-blue-600" />;
+                case 'plan': return <MapIcon size={18} className="text-amber-500" />;
+                case 'tasks': return <ListTodo size={18} className="text-emerald-500" />;
+                case 'verify': return <ShieldCheck size={18} className="text-purple-500" />;
+                default: return <FileText size={18} className="text-slate-400" />;
+            }
+        };
+
+        const SidebarItem = ({ file, isActive, onClick }) => (
+            <button onClick={onClick} className={`w-full flex items-center gap-3 px-4 py-3.5 text-sm transition-all border-l-2 text-left group ${isActive ? 'bg-white border-blue-600 shadow-sm' : 'border-transparent hover:bg-slate-100 hover:text-slate-900'}`}>
+                <div className={`p-1.5 rounded-md ${isActive ? 'bg-blue-50' : 'bg-white group-hover:bg-white'}`}>
+                    <FileIcon type={file.type} />
+                </div>
+                <div className="flex flex-col overflow-hidden w-full">
+                    <div className="flex justify-between items-center w-full">
+                        <span className={`font-medium truncate ${isActive ? 'text-slate-900' : 'text-slate-600'}`}>{file.name}</span>
+                        {isActive && <ChevronRight size={14} className="text-blue-500 shrink-0" />}
+                    </div>
+                    <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold truncate">{file.description}</span>
+                </div>
+            </button>
+        );
+
+        const ProgressBar = ({ percentage, total, completed, onClick, minimal = false }) => {
+            if (minimal) {
+                return (
+                     <div className="w-full">
+                        <div className="flex justify-between text-xs mb-1.5">
+                            <span className={`font-semibold ${percentage === 100 ? 'text-green-600' : 'text-slate-600'}`}>
+                                {percentage === 100 ? 'Done' : `${percentage}%`}
+                            </span>
+                            <span className="text-slate-400">{completed}/{total}</span>
+                        </div>
+                        <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
+                            <div className={`h-full rounded-full ${percentage === 100 ? 'bg-green-500' : 'bg-amber-500'}`} style={{ width: `${percentage}%` }}></div>
+                        </div>
+                     </div>
+                );
+            }
+
+            return (
+                <button onClick={onClick} className="w-full text-left bg-slate-50 rounded-lg p-3 border border-slate-200 shadow-sm cursor-pointer hover:bg-white hover:border-blue-300 hover:shadow-md transition-all group" title="Go to Tasks Checklist">
+                    <div className="flex justify-between items-end mb-2">
+                        <div className="flex flex-col">
+                            <div className="text-xs font-medium text-slate-500 mb-0.5 group-hover:text-blue-600 transition-colors">Feature Status</div>
+                            <div className="flex items-center gap-2 text-sm font-bold text-slate-800">
+                                {percentage === 100 ? (
+                                    <span className="flex items-center gap-1.5 text-green-600"><Check size={14} strokeWidth={3}/> Ready to Verify</span>
+                                ) : (
+                                    <span className="flex items-center gap-1.5 text-amber-600"><div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" /> In Progress</span>
+                                )}
+                            </div>
+                        </div>
+                        <div className="text-xs font-mono font-medium text-slate-400 group-hover:text-slate-600">{completed}/{total}</div>
+                    </div>
+                    <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
+                        <div className={`h-full transition-all duration-500 ease-out rounded-full ${percentage === 100 ? 'bg-green-500' : 'bg-amber-500'}`} style={{ width: `${percentage}%` }} />
+                    </div>
+                </button>
+            );
+        };
+
+        const Dashboard = ({ features, onSelectFeature }) => {
+            return (
+                <div className="p-8 max-w-6xl mx-auto">
+                    <div className="flex items-center gap-3 mb-8">
+                        <div className="p-2 bg-indigo-600 rounded-lg text-white"><FolderGit size={24} /></div>
+                        <div>
+                            <h1 className="text-2xl font-bold text-slate-900">Project Specifications</h1>
+                            <p className="text-slate-500 text-sm">Overview of all active features and their implementation status</p>
+                        </div>
+                    </div>
+
+                    {features.length === 0 ? (
+                        <div className="text-slate-500 text-sm">No features found.</div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {features.map(feature => {
+                                const progress = calculateProgress(feature.files);
+                                return (
+                                    <div key={feature.id} onClick={() => onSelectFeature(feature.id)} 
+                                         className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm hover:shadow-md hover:border-blue-300 transition-all cursor-pointer group flex flex-col h-full">
+                                        <div className="flex items-start justify-between mb-4">
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-slate-400 text-sm font-mono">#</span>
+                                                <h3 className="font-bold text-slate-800 group-hover:text-blue-600 transition-colors">{feature.title}</h3>
+                                            </div>
+                                            {progress.percentage === 100 && <div className="text-green-500"><ShieldCheck size={18} /></div>}
+                                        </div>
+                                        
+                                        <div className="flex-1">
+                                            <p className="text-xs text-slate-500 mb-4 line-clamp-2">
+                                                {feature.files.find(f => f.type === 'spec')?.content.slice(0, 100).replace(/#/g, '') || 'No description'}...
+                                            </p>
+                                        </div>
+
+                                        <div className="mt-auto pt-4 border-t border-slate-100">
+                                            <ProgressBar 
+                                                minimal 
+                                                percentage={progress.percentage} 
+                                                completed={progress.completed} 
+                                                total={progress.total} 
+                                            />
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        // --- MAIN APP ---
+
+        function App() {
+            // State: null means "Dashboard View", string means "Specific Feature View"
+            const [features, setFeatures] = useState([]);
+            const [loading, setLoading] = useState(true);
+            const [error, setError] = useState(null);
+            const [activeFeatureId, setActiveFeatureId] = useState(CONFIG.targetFeature || null);
+            const [selectedFileId, setSelectedFileId] = useState('spec');
+            const [isSidebarOpen, setSidebarOpen] = useState(true);
+            const [viewMode, setViewMode] = useState('preview');
+
+            useEffect(() => {
+                fetchFeatures()
+                    .then(data => {
+                        setFeatures(data || []);
+                        // If target feature provided and exists, keep it; else reset
+                        if (CONFIG.targetFeature) {
+                            const exists = data.some(f => f.id === CONFIG.targetFeature);
+                            if (!exists) {
+                                setActiveFeatureId(null);
+                            }
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        setError(err?.message || 'Failed to load features');
+                    })
+                    .finally(() => setLoading(false));
+            }, []);
+
+            // Derived State
+            const activeFeature = useMemo(() => 
+                features.find(f => f.id === activeFeatureId), 
+            [features, activeFeatureId]);
+
+            const selectedFile = useMemo(() => {
+                if (!activeFeature) return null;
+                return activeFeature.files.find(f => f.id === selectedFileId) || activeFeature.files[0];
+            }, [activeFeature, selectedFileId]);
+
+            const stats = useMemo(() => {
+                if (!activeFeature) return { completed: 0, total: 0, percentage: 0 };
+                return calculateProgress(activeFeature.files);
+            }, [activeFeature]);
+
+            // Handlers
+            const handleNavigateFile = (fileId) => {
+                setSelectedFileId(fileId);
+                if (window.innerWidth < 1024) setSidebarOpen(false);
+            };
+
+            const handleBackToDashboard = () => {
+                setActiveFeatureId(null);
+                setSidebarOpen(true); // Ensure sidebar is visible when returning or reset logic
+            };
+
+            const handleSelectFeature = (id) => {
+                setActiveFeatureId(id);
+                setSelectedFileId('spec'); // Reset to spec file when opening feature
+            };
+
+            // --- VIEW: DASHBOARD ---
+            if (!activeFeatureId) {
+                return (
+                     <div className="min-h-screen bg-slate-50 font-sans text-slate-900 overflow-auto">
+                        {loading ? (
+                            <div className="p-8 max-w-6xl mx-auto text-slate-500">Loading features...</div>
+                        ) : error ? (
+                            <div className="p-8 max-w-6xl mx-auto">
+                                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                                    {error}
+                                </div>
+                            </div>
+                        ) : features.length === 0 ? (
+                            <div className="p-8 max-w-4xl mx-auto">
+                                <div className="bg-white border border-slate-200 rounded-xl p-6 text-slate-600 shadow-sm">
+                                    No features found in folder "{CONFIG.folderName}". Use --folder to point to a valid specs directory.
+                                </div>
+                            </div>
+                        ) : (
+                            <Dashboard features={features} onSelectFeature={handleSelectFeature} />
+                        )}
+                     </div>
+                );
+            }
+
+            // --- VIEW: FEATURE DETAILS (Legacy View) ---
+            if (!activeFeature) {
+                return (
+                    <div className="min-h-screen bg-slate-50 p-10 text-slate-600">
+                        <div className="max-w-3xl mx-auto bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                            Feature not found. Please go back to dashboard.
+                            <div className="mt-4">
+                                <button onClick={handleBackToDashboard} className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm">Back</button>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="flex h-screen bg-slate-50 overflow-hidden font-sans text-slate-900">
+                    
+                    {/* Mobile Sidebar Overlay */}
+                    {!isSidebarOpen && (
+                        <button onClick={() => setSidebarOpen(true)} className="lg:hidden absolute top-4 left-4 z-50 p-2 bg-white rounded-md shadow-md border border-slate-200 text-slate-600">
+                            <MenuIcon size={20} />
+                        </button>
+                    )}
+
+                    {/* Sidebar */}
+                    <aside className={`fixed inset-y-0 left-0 z-40 w-80 bg-slate-50 border-r border-slate-200 transform transition-transform duration-200 ease-in-out lg:relative lg:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+                        <div className="flex flex-col h-full">
+                            
+                            {/* Header: Back Button */}
+                            <div className="h-16 flex items-center px-4 border-b border-slate-200 bg-white">
+                                <button onClick={handleBackToDashboard} className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors w-full">
+                                    <div className="p-1.5 rounded-md bg-slate-100 group-hover:bg-blue-50">
+                                        <ChevronLeft size={16} />
+                                    </div>
+                                    Back to Features
+                                </button>
+                                <button onClick={() => setSidebarOpen(false)} className="lg:hidden ml-auto p-1 text-slate-400 hover:text-slate-600"><X size={20} /></button>
+                            </div>
+
+                            {/* Active Feature Context */}
+                            <div className="px-5 py-4 bg-slate-50/50">
+                                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Active Feature</div>
+                                <div className="flex items-center gap-2 text-slate-800 font-mono text-sm font-semibold bg-white border border-slate-200 px-3 py-2 rounded-md shadow-sm truncate">
+                                    <span className="text-blue-500">#</span> <span className="truncate">{activeFeature.title}</span>
+                                </div>
+                            </div>
+
+                            {/* File List */}
+                            <div className="flex-1 overflow-y-auto py-2">
+                                <nav className="space-y-0.5 px-3">
+                                    {activeFeature.files.map(file => (
+                                        <SidebarItem key={file.id} file={file} isActive={selectedFile.id === file.id} onClick={() => handleNavigateFile(file.id)} />
+                                    ))}
+                                </nav>
+                            </div>
+
+                            {/* Footer Progress */}
+                            <div className="p-4 border-t border-slate-200 bg-white">
+                                <ProgressBar percentage={stats.percentage} total={stats.total} completed={stats.completed} onClick={() => handleNavigateFile('tasks')} />
+                            </div>
+                        </div>
+                    </aside>
+
+                    {/* Main Content */}
+                    <main className="flex-1 flex flex-col h-full min-w-0 bg-white relative">
+                        {/* Header */}
+                        <header className="h-16 flex items-center justify-between px-6 border-b border-slate-100 bg-white shrink-0 z-10">
+                            <div className="flex items-center gap-4 overflow-hidden">
+                                <button onClick={() => setSidebarOpen(!isSidebarOpen)} className="hidden lg:flex p-2 text-slate-400 hover:text-slate-600 rounded-md hover:bg-slate-50 transition-colors"><MenuIcon size={18} /></button>
+                                <h1 className="text-lg font-bold text-slate-800 truncate">{selectedFile.name}</h1>
+                            </div>
+                            <div className="flex items-center gap-3 shrink-0">
+                                <div className="flex bg-slate-100/80 p-1 rounded-lg border border-slate-200">
+                                    <button onClick={() => setViewMode('preview')} className={`flex items-center gap-2 px-3 py-1.5 text-xs font-bold rounded-md transition-all ${viewMode === 'preview' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}><Eye size={14} /> Preview</button>
+                                    <button onClick={() => setViewMode('raw')} className={`flex items-center gap-2 px-3 py-1.5 text-xs font-bold rounded-md transition-all ${viewMode === 'raw' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}><CodeIcon size={14} /> Raw</button>
+                                </div>
+                                <div className="w-px h-6 bg-slate-200 mx-1"></div>
+                                {/* Copy Button Logic embedded here for brevity */}
+                                <button onClick={() => {
+                                    const t = document.createElement("textarea"); t.value = selectedFile.content; document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t);
+                                }} className="flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all border border-slate-200 hover:border-blue-200 shadow-sm"><Copy size={14} /> Copy</button>
+                            </div>
+                        </header>
+
+                        {/* Content */}
+                        <div className="flex-1 overflow-auto bg-slate-50/30 scroll-smooth">
+                            <div className="max-w-5xl mx-auto my-8 px-6 lg:px-10 pb-20">
+                                <div className="bg-white rounded-xl shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] border border-slate-200 overflow-hidden min-h-[70vh]">
+                                    {viewMode === 'preview' ? (
+                                        <div className="p-10 lg:p-14"><SmartMarkdownRenderer content={selectedFile.content} onNavigate={handleNavigateFile} /></div>
+                                    ) : (
+                                        <div className="bg-[#1e293b] h-full min-h-[70vh] flex flex-col">
+                                            <div className="bg-[#0f172a] px-4 py-2 text-xs text-slate-400 font-mono border-b border-slate-700 flex justify-between"><span>markdown</span><span>utf-8</span></div>
+                                            <textarea readOnly className="w-full flex-1 bg-transparent text-slate-300 font-mono text-sm p-6 resize-none focus:outline-none leading-relaxed" value={selectedFile.content} spellCheck="false"></textarea>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>

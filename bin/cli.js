@@ -1,13 +1,16 @@
 #!/usr/bin/env node
 
 import fs from "fs";
+import http from "http";
 import path from "path";
+import { exec } from "child_process";
 import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const DEFAULT_FOLDER = "spec";
+const VIEW_PORT = 4173;
 const args = process.argv.slice(2);
 const command = args[0];
 
@@ -137,11 +140,226 @@ ${AGENTS_END}
 
   console.log(`✅ Spec Feature initialized in '${folderName}' folder!`);
   process.exit(0);
-}
+  process.exit(0);
+} else if (command === "view") {
+  const { targetFeature, folderName } = parseViewArgs(args.slice(1));
+  const htmlPath = path.join(__dirname, "viewer.html");
+  const baseFolder = path.join(process.cwd(), folderName);
+  const featuresRoot = path.join(baseFolder, "features");
 
-console.log("Usage: npx spec-feature init [folder-name]");
-process.exit(1);
+  if (!fs.existsSync(htmlPath)) {
+    console.error(`❌ Viewer file not found: ${htmlPath}`);
+    process.exit(1);
+  }
+
+  if (!fs.existsSync(baseFolder)) {
+    console.error(
+      `❌ Folder not found: ${baseFolder}. Use --folder/-f to point to the specs root (it must contain "features/"). Example: npx spec-feature view --folder spec`,
+    );
+    process.exit(1);
+  }
+
+  if (!fs.existsSync(featuresRoot)) {
+    console.error(
+      `❌ Features directory not found: ${featuresRoot}. The folder must include "features/". Use --folder/-f to set the correct root, e.g. npx spec-feature view --folder spec`,
+    );
+    process.exit(1);
+  }
+
+  const server = http.createServer((req, res) => {
+    const url = new URL(req.url, `http://localhost:${VIEW_PORT}`);
+
+    if (url.pathname === "/api/features") {
+      try {
+        const payload = readFeatures(featuresRoot);
+        res.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+        res.end(JSON.stringify(payload));
+      } catch (err) {
+        console.error("❌ Failed to read features:", err?.message || err);
+        res.writeHead(500, { "Content-Type": "application/json; charset=utf-8" });
+        res.end(JSON.stringify({ error: "Failed to read features" }));
+      }
+      return;
+    }
+
+    fs.readFile(htmlPath, "utf8", (err, data) => {
+      if (err) {
+        console.error("❌ Failed to read viewer.html:", err?.message || err);
+        res.writeHead(500, { "Content-Type": "text/plain" });
+        res.end("Internal server error");
+        return;
+      }
+
+      const configScript = `<script>window.SPEC_FEATURE_CONFIG = ${JSON.stringify({
+        folderName,
+        targetFeature,
+      })};</script>`;
+
+      const htmlWithConfig = data.replace(
+        "<!-- spec-feature:config:inject -->",
+        configScript,
+      );
+
+      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+      res.end(htmlWithConfig);
+    });
+  });
+
+  server.on("error", err => {
+    if (err?.code === "EADDRINUSE") {
+      console.error(`❌ Port ${VIEW_PORT} is already in use. Please free it and try again.`);
+    } else {
+      console.error("❌ Failed to start viewer server:", err?.message || err);
+    }
+    process.exit(1);
+  });
+
+  const sockets = new Set();
+
+  // Track active sockets so we can destroy them on shutdown
+  server.on("connection", socket => {
+    sockets.add(socket);
+    socket.on("close", () => sockets.delete(socket));
+  });
+
+  server.listen(VIEW_PORT, () => {
+    const featureQuery = targetFeature ? `?feature=${encodeURIComponent(targetFeature)}` : "";
+    const url = `http://localhost:${VIEW_PORT}/${featureQuery}`;
+    console.log(`📄 Viewer running at ${url}`);
+    openBrowser(url);
+  });
+
+  const shutdown = signal => {
+    console.log(`\nReceived ${signal}, shutting down viewer...`);
+    server.close(() => process.exit(0));
+    sockets.forEach(socket => socket.destroy());
+    // Fallback in case sockets hang
+    setTimeout(() => process.exit(0), 1000).unref();
+  };
+
+  // Keep process alive until manual stop (Ctrl+C)
+  process.once("SIGINT", () => shutdown("SIGINT"));
+  process.once("SIGTERM", () => shutdown("SIGTERM"));
+} else {
+  console.log("Usage: npx spec-feature init [folder-name]");
+  console.log("       npx spec-feature view [feature-name] [--folder|-f folder]");
+  process.exit(1);
+}
 
 function escapeRegExp(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function openBrowser(url) {
+  const platform = process.platform;
+  const command =
+    platform === "win32"
+      ? `start "" "${url}"`
+      : platform === "darwin"
+        ? `open "${url}"`
+        : `xdg-open "${url}"`;
+
+  exec(command, err => {
+    if (err) {
+      console.error("⚠️ Failed to open browser automatically. Please open the URL manually:", url);
+    }
+  });
+}
+
+function parseViewArgs(restArgs) {
+  let targetFeature = "";
+  let folderName = DEFAULT_FOLDER;
+
+  for (let i = 0; i < restArgs.length; i++) {
+    const val = restArgs[i];
+
+    if (val === "--folder" || val === "-f") {
+      const next = restArgs[i + 1];
+      if (!next || next.startsWith("-")) {
+        console.error("❌ Missing folder name after --folder/-f");
+        process.exit(1);
+      }
+      folderName = next;
+      i++;
+      continue;
+    }
+
+    if (!targetFeature) {
+      targetFeature = val;
+    }
+  }
+
+  return { targetFeature, folderName };
+}
+
+function readFeatures(featuresRoot) {
+  const entries = fs.readdirSync(featuresRoot, { withFileTypes: true });
+
+  const features = entries
+    .filter(d => d.isDirectory())
+    .map(dirent => {
+      const featureId = dirent.name;
+      const featurePath = path.join(featuresRoot, featureId);
+      const files = ["spec.md", "plan.md", "tasks.md", "verify-report.md"]
+        .filter(name => fs.existsSync(path.join(featurePath, name)))
+        .map(name => {
+          const content = fs.readFileSync(path.join(featurePath, name), "utf8");
+          const type = name.startsWith("spec")
+            ? "spec"
+            : name.startsWith("plan")
+              ? "plan"
+              : name.startsWith("tasks")
+                ? "tasks"
+                : "verify";
+          return {
+            id: type,
+            name,
+            type,
+            description: describeFile(type),
+            content,
+          };
+        });
+
+      const progress = calculateTasksProgress(files);
+
+      return {
+        id: featureId,
+        title: humanize(featureId),
+        status: progress.percentage === 100 ? "done" : progress.total > 0 ? "in-progress" : "pending",
+        progress,
+        files,
+      };
+    });
+
+  return features;
+}
+
+function humanize(slug) {
+  return slug
+    .split(/[-_]/g)
+    .filter(Boolean)
+    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+}
+
+function describeFile(type) {
+  if (type === "spec") return "Specification";
+  if (type === "plan") return "Plan";
+  if (type === "tasks") return "Tasks";
+  if (type === "verify") return "Verify report";
+  return "Document";
+}
+
+function calculateTasksProgress(files) {
+  const tasksFile = files.find(f => f.type === "tasks");
+  if (!tasksFile) return { completed: 0, total: 0, percentage: 0 };
+
+  const completed = (tasksFile.content.match(/- \[x\]/g) || []).length;
+  const pending = (tasksFile.content.match(/- \[ \]/g) || []).length;
+  const total = completed + pending;
+  return {
+    completed,
+    total,
+    percentage: total === 0 ? 0 : Math.round((completed / total) * 100),
+  };
 }
