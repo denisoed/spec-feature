@@ -116,10 +116,19 @@
             </div>
         );
 
+        const renderBoldText = (text) => {
+            const parts = text.split('**');
+            return parts.map((part, idx) => 
+                idx % 2 === 1 ? <strong key={idx} className="font-semibold text-slate-900 dark:text-slate-100">{part}</strong> : part
+            );
+        };
+
         const LinkRenderer = ({ text, onNavigate }) => {
             const fileRegex = /(spec\.md|plan\.md|tasks\.md|verify-report\.md)/g;
             const parts = text.split(fileRegex);
-            if (parts.length === 1) return <span className="text-slate-600 dark:text-slate-400">{text}</span>;
+            if (parts.length === 1) {
+                return <span className="text-slate-600 dark:text-slate-400">{renderBoldText(text)}</span>;
+            }
             return (
                 <span className="text-slate-600 dark:text-slate-400">
                     {parts.map((part, i) => {
@@ -134,7 +143,7 @@
                                 </button>
                             );
                         }
-                        return part;
+                        return renderBoldText(part);
                     })}
                 </span>
             );
@@ -163,9 +172,18 @@
                     continue;
                 }
                 if (inCodeBlock) { codeBlockContent.push(line); continue; }
-                if (line.startsWith('# ')) renderLines.push(<h1 key={i} className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-6 pb-2 border-b border-slate-200 dark:border-slate-700">{line.replace('# ', '')}</h1>);
-                else if (line.startsWith('## ')) renderLines.push(<h2 key={i} className="text-lg font-bold text-slate-800 dark:text-slate-200 mt-8 mb-3 flex items-center gap-2">{line.replace('## ', '')}</h2>);
-                else if (line.startsWith('### ')) renderLines.push(<h3 key={i} className="text-md font-semibold text-slate-700 dark:text-slate-300 mt-6 mb-2">{line.replace('### ', '')}</h3>);
+                if (line.startsWith('# ')) {
+                    const h1Text = line.replace('# ', '');
+                    renderLines.push(<h1 key={i} className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-6 pb-2 border-b border-slate-200 dark:border-slate-700">{renderBoldText(h1Text)}</h1>);
+                }
+                else if (line.startsWith('## ')) {
+                    const h2Text = line.replace('## ', '');
+                    renderLines.push(<h2 key={i} className="text-lg font-bold text-slate-800 dark:text-slate-200 mt-8 mb-3 flex items-center gap-2">{renderBoldText(h2Text)}</h2>);
+                }
+                else if (line.startsWith('### ')) {
+                    const h3Text = line.replace('### ', '');
+                    renderLines.push(<h3 key={i} className="text-md font-semibold text-slate-700 dark:text-slate-300 mt-6 mb-2">{renderBoldText(h3Text)}</h3>);
+                }
                 else if (line.trim().startsWith('- [ ]') || line.trim().startsWith('- [x]')) {
                     const isChecked = line.trim().startsWith('- [x]');
                     const text = line.replace(/- \[[x ]\] /, '');
@@ -175,13 +193,30 @@
                                 {isChecked && <Check size={12} strokeWidth={3} />}
                             </div>
                             <span className={`${isChecked ? 'text-slate-400 dark:text-slate-500 line-through' : 'text-slate-700 dark:text-slate-300'}`}>
-                                {text.split('**').map((part, idx) => idx % 2 === 1 ? <strong key={idx} className="font-semibold text-slate-900 dark:text-slate-100">{part}</strong> : part)}
+                                {renderBoldText(text)}
                             </span>
                         </div>
                     );
                 }
-                else if (line.startsWith('- ')) renderLines.push(<li key={i} className="ml-5 list-disc text-slate-700 dark:text-slate-300 pl-1">{line.replace('- ', '').replace(/\*\*(.*?)\*\*/g, (match, p1) => p1)}</li>);
-                else if (/^\d+\. /.test(line)) renderLines.push(<div key={i} className="ml-5 text-slate-700 dark:text-slate-300 flex gap-2"><span className="font-mono text-slate-400 dark:text-slate-500 font-bold w-4 text-right">{line.split('.')[0]}.</span> {line.replace(/^\d+\. /, '')}</div>);
+                else if (line.startsWith('- ')) {
+                    const listText = line.replace('- ', '');
+                    renderLines.push(
+                        <li key={i} className="ml-5 list-disc text-slate-700 dark:text-slate-300 pl-1">
+                            {renderBoldText(listText)}
+                        </li>
+                    );
+                }
+                else if (/^\d+\. /.test(line)) {
+                    const numMatch = line.match(/^(\d+)\. (.*)/);
+                    if (numMatch) {
+                        renderLines.push(
+                            <div key={i} className="ml-5 text-slate-700 dark:text-slate-300 flex gap-2">
+                                <span className="font-mono text-slate-400 dark:text-slate-500 font-bold w-4 text-right">{numMatch[1]}.</span>
+                                <span>{renderBoldText(numMatch[2])}</span>
+                            </div>
+                        );
+                    }
+                }
                 else if (line.trim() === '') renderLines.push(<div key={i} className="h-2"></div>);
                 else renderLines.push(<p key={i} className="leading-relaxed"><LinkRenderer text={line} onNavigate={onNavigate} /></p>);
             }
