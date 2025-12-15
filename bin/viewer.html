@@ -38,7 +38,7 @@
     <script type="text/babel">
         const { useState, useMemo, useEffect } = React;
 
-        const CONFIG = window.SPEC_FEATURE_CONFIG || { folderName: "spec", targetFeature: "" };
+        const CONFIG = window.SPEC_FEATURE_CONFIG || { folderName: "spec", targetFeature: "", hasFeatures: false, isInitialized: false };
 
         // --- ICONS (Lucide Replacements for Standalone HTML) ---
         const IconBase = ({ size = 24, className = "", children, ...props }) => (
@@ -303,6 +303,7 @@
             const [selectedFileId, setSelectedFileId] = useState('spec');
             const [isSidebarOpen, setSidebarOpen] = useState(true);
             const [viewMode, setViewMode] = useState('preview');
+            const initializedWithoutFeatures = CONFIG.isInitialized && !CONFIG.hasFeatures;
 
             useEffect(() => {
                 fetchFeatures()
@@ -367,10 +368,32 @@
                                 </div>
                             </div>
                         ) : features.length === 0 ? (
-                            <div className="p-8 max-w-4xl mx-auto">
-                                <div className="bg-white border border-slate-200 rounded-xl p-6 text-slate-600 shadow-sm">
-                                    No features found in folder "{CONFIG.folderName}". Use --folder to point to a valid specs directory.
+                            <div className="p-8 max-w-5xl mx-auto space-y-6">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2 bg-indigo-600 rounded-lg text-white"><FolderGit size={24} /></div>
+                                    <div>
+                                        <h1 className="text-2xl font-bold text-slate-900">Project Specifications</h1>
+                                        <p className="text-slate-500 text-sm">Overview of all active features and their implementation status</p>
+                                    </div>
                                 </div>
+                                {initializedWithoutFeatures ? (
+                                    <div className="bg-white border border-slate-200 rounded-xl p-6 text-slate-600 shadow-sm space-y-4">
+                                        <div className="font-semibold text-slate-900">No features found. Create your first specification:</div>
+                                        <div className="space-y-2">
+                                            <div className="text-sm">1. Open your AI assistant (Claude, Cursor, Copilot, etc.)</div>
+                                            <div className="text-sm">2. Copy and paste this prompt:</div>
+                                            <pre className="bg-slate-50 border border-slate-200 rounded-md p-3 text-sm text-slate-700 overflow-auto font-mono">Use the template from spec/feature.md.
+#feature-name# Your description here</pre>
+                                            <div className="text-sm">Replace <code className="bg-slate-100 px-1 py-0.5 rounded">feature-name</code> with your feature slug (e.g., <code className="bg-slate-100 px-1 py-0.5 rounded">user-auth</code>) and describe what you want to build.</div>
+                                            <div className="text-sm">3. The AI will create <code className="bg-slate-100 px-1 py-0.5 rounded">spec/features/&lt;feature-name&gt;/</code> with <code className="bg-slate-100 px-1 py-0.5 rounded">spec.md</code>, <code className="bg-slate-100 px-1 py-0.5 rounded">plan.md</code>, and <code className="bg-slate-100 px-1 py-0.5 rounded">tasks.md</code></div>
+                                            <div className="text-sm font-medium text-slate-700">4. Refresh this page to see your new feature</div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="bg-white border border-slate-200 rounded-xl p-6 text-slate-600 shadow-sm">
+                                        No features found in folder "{CONFIG.folderName}". Use --folder to point to a valid specs directory.
+                                    </div>
+                                )}
                             </div>
                         ) : (
                             <Dashboard features={features} onSelectFeature={handleSelectFeature} />

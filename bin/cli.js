@@ -154,17 +154,25 @@ ${AGENTS_END}
 
   if (!fs.existsSync(baseFolder)) {
     console.error(
-      `❌ Folder not found: ${baseFolder}. Use --folder/-f to point to the specs root (it must contain "features/"). Example: npx spec-feature view --folder spec`,
+      `❌ Folder not found: ${baseFolder}. Use --folder/-f to point to the specs root (it must contain "core/", "feature.md"). Example: npx spec-feature view --folder spec`,
+    );
+    process.exit(1);
+  }
+
+  const isInitialized = isSpecFeatureInitialized(baseFolder);
+
+  if (!isInitialized) {
+    console.error(
+      `❌ Spec Feature is not initialized in ${baseFolder}. Run "npx spec-feature init" (or point to the correct folder with --folder/-f).`,
     );
     process.exit(1);
   }
 
   if (!fs.existsSync(featuresRoot)) {
-    console.error(
-      `❌ Features directory not found: ${featuresRoot}. The folder must include "features/". Use --folder/-f to set the correct root, e.g. npx spec-feature view --folder spec`,
-    );
-    process.exit(1);
+    fs.mkdirSync(featuresRoot, { recursive: true });
   }
+
+  const hasFeatures = hasAnyFeatures(featuresRoot);
 
   const server = http.createServer((req, res) => {
     const url = new URL(req.url, `http://localhost:${VIEW_PORT}`);
@@ -193,6 +201,8 @@ ${AGENTS_END}
       const configScript = `<script>window.SPEC_FEATURE_CONFIG = ${JSON.stringify({
         folderName,
         targetFeature,
+        hasFeatures,
+        isInitialized,
       })};</script>`;
 
       const htmlWithConfig = data.replace(
@@ -293,6 +303,8 @@ function parseViewArgs(restArgs) {
 }
 
 function readFeatures(featuresRoot) {
+  if (!fs.existsSync(featuresRoot)) return [];
+
   const entries = fs.readdirSync(featuresRoot, { withFileTypes: true });
 
   const features = entries
@@ -362,4 +374,15 @@ function calculateTasksProgress(files) {
     total,
     percentage: total === 0 ? 0 : Math.round((completed / total) * 100),
   };
+}
+
+function isSpecFeatureInitialized(baseFolder) {
+  const hasCore = fs.existsSync(path.join(baseFolder, "core"));
+  const hasFeatureTemplate = fs.existsSync(path.join(baseFolder, "feature.md"));
+  return hasCore && hasFeatureTemplate;
+}
+
+function hasAnyFeatures(featuresRoot) {
+  if (!fs.existsSync(featuresRoot)) return false;
+  return fs.readdirSync(featuresRoot, { withFileTypes: true }).some(entry => entry.isDirectory());
 }
