@@ -40,23 +40,25 @@ npx spec-feature view <feature-slug> --folder my-docs
 
 ```mermaid
 graph TD
-    A[spec/] --> B[README.md]
-    A --> C[feature.md]
-    A --> D[core/]
-    A --> E[features/]
-    A --> F[constitution/]
+    spec_root[spec/] --> readme[README.md]
+    spec_root --> feature_template[feature.md]
+    spec_root --> core_dir[core/]
+    spec_root --> features_dir[features/]
+    spec_root --> constitution_dir[constitution/]
     
-    D --> G[spec.md]
-    D --> H[plan.md]
-    D --> I[tasks.md]
-    D --> J[verify.md]
-    D --> K[hotfix.md]
+    core_dir --> core_spec[spec.md]
+    core_dir --> core_plan[plan.md]
+    core_dir --> core_tasks[tasks.md]
+    core_dir --> core_clarifications[clarifications.md]
+    core_dir --> core_verify[verify.md]
+    core_dir --> core_hotfix[hotfix.md]
     
-    E --> L[user-auth/]
-    L --> M[spec.md]
-    L --> N[plan.md]
-    L --> O[tasks.md]
-    L --> P[verify-report.md]
+    features_dir --> feat[user-auth/]
+    feat --> feat_spec[spec.md]
+    feat --> feat_plan[plan.md]
+    feat --> feat_tasks[tasks.md]
+    feat --> feat_clarifications[clarifications.md]
+    feat --> feat_verify[verify-report.md]
 ```
 
 **Templates** (core/) → **Features** (features/)
@@ -79,13 +81,14 @@ Use the template from spec/feature.md.
 #feature-name# Your description here
 ```
 
-Format: `#feature# description` → creates `spec/features/feature-name/` with 3 files:
+Format: `#feature# description` → creates `spec/features/feature-name/` with up to 4 files (adds `clarifications.md` when needed):
 
 ```mermaid
 flowchart LR
     A[feature.md template] --> B[spec.md]
     A --> C[plan.md]
     A --> D[tasks.md]
+    A --> E[clarifications.md]
 ```
 
 ### 2️⃣ Execute Tasks

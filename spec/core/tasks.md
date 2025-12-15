@@ -10,11 +10,14 @@ Template helps form a task list for feature implementation in the **spec-feature
 **General rules**
 
 - Before doing anything, read and follow `spec/constitution/*`.
-- If information is missing, write `No data — needs clarification: <what exactly>` and do not guess.
+- If information is missing:
+  - add a clarifying question to `spec/features/{FEATURE}/clarifications.md` (use `spec/core/clarifications.md` as a template),
+  - in this document, write `No data — needs clarification (see clarifications.md: #<n>)`,
+  - do not guess.
 - Work only with specification files within `/spec` directory: automatically create necessary directories and files.
 - Do not generate application code, configuration snippets, scripts, or patches while preparing the task list.
 - Use `spec/core/spec.md` and `spec/core/plan.md` as base sources of specification and plan when preparing tasks.
-- Use `spec/features/{FEATURE}/spec.md` and `spec/features/{FEATURE}/plan.md` as additional context. If any file is missing, continue working based on available materials and **CONTEXT**.
+- Use `spec/features/{FEATURE}/spec.md`, `spec/features/{FEATURE}/plan.md`, and `spec/features/{FEATURE}/clarifications.md` (resolved answers/decisions) as additional context. If any file is missing, continue working based on available materials and **CONTEXT**.
 - Substitute specific values instead of placeholders (`{FEATURE}`, `{CONTEXT}`, etc.). The final document should not contain hints, examples, or `...` markers.
 - Each task is a checkbox with result formulation and description of mandatory checks/tests.
 - If a direction is not required, explicitly indicate under the corresponding subheading `Not required — reason: <explanation>`.
@@ -31,11 +34,12 @@ Template helps form a task list for feature implementation in the **spec-feature
 **Steps**
 
 1. Create the directory structure `spec/features/{FEATURE}/` if it doesn't exist.
-2. Form the task list according to the sections above, based on **CONTEXT** and available additional context.
-3. Create/update the file `spec/features/{FEATURE}/tasks.md` with the complete task list content.
-4. Ensure that tasks cover implementation, verification, and release of the feature. The final Markdown should not contain unfilled placeholders.
-5. Record in the `## Definition of Done` section that `/spec/core/verify.md` execution is performed after completing all tasks, so executors do this automatically upon completion of the list.
-6. Ensure the document is complete and ready for implementation.
+2. If any clarifying questions are needed, create/update `spec/features/{FEATURE}/clarifications.md` using `spec/core/clarifications.md` and stop if unanswered questions block correct task definition.
+3. Form the task list according to the sections above, based on **CONTEXT** and available additional context.
+4. Create/update the file `spec/features/{FEATURE}/tasks.md` with the complete task list content.
+5. Ensure that tasks cover implementation, verification, and release of the feature. The final Markdown should not contain unfilled placeholders.
+6. Record in the `## Definition of Done` section that `/spec/core/verify.md` execution is performed after completing all tasks, so executors do this automatically upon completion of the list.
+7. Ensure the document is complete and ready for implementation.
 
 **Result template**
 
