@@ -116,6 +116,124 @@
             </div>
         );
 
+        const renderFormattedText = (text) => {
+            if (!text || typeof text !== 'string') return text;
+            
+            const parts = [];
+            let keyCounter = 0;
+            let lastIndex = 0;
+            
+            // Find all matches (code and bold) with their positions
+            const matches = [];
+            
+            // Find inline code matches - matches `text` but not `` (empty backticks)
+            // Pattern: backtick, one or more non-backtick characters, backtick
+            const codeRegex = /`([^`]+)`/g;
+            let match;
+            while ((match = codeRegex.exec(text)) !== null) {
+                // Only add non-empty matches (at least one character between backticks)
+                if (match[1] && match[1].length > 0) {
+                    matches.push({
+                        start: match.index,
+                        end: match.index + match[0].length,
+                        content: match[1],
+                        type: 'code'
+                    });
+                }
+            }
+            
+            // Find bold text matches - matches **text**
+            // Pattern: **, one or more non-asterisk characters (non-greedy), **
+            // This handles: **bold**, but not *** or ** (empty) or **bold*text** (nested asterisks)
+            const boldRegex = /\*\*([^*]+?)\*\*/g;
+            while ((match = boldRegex.exec(text)) !== null) {
+                // Only add non-empty matches (at least one character between **)
+                if (match[1] && match[1].length > 0) {
+                    matches.push({
+                        start: match.index,
+                        end: match.index + match[0].length,
+                        content: match[1],
+                        type: 'bold'
+                    });
+                }
+            }
+            
+            // If no matches found, return original text
+            if (matches.length === 0) {
+                return text;
+            }
+            
+            // Sort matches by position
+            matches.sort((a, b) => a.start - b.start);
+            
+            // Remove overlapping matches (prioritize code over bold)
+            // First pass: mark overlapping matches for removal
+            const toRemove = new Set();
+            for (let i = 0; i < matches.length; i++) {
+                if (toRemove.has(i)) continue;
+                const current = matches[i];
+                for (let j = i + 1; j < matches.length; j++) {
+                    if (toRemove.has(j)) continue;
+                    const other = matches[j];
+                    // Check if matches overlap
+                    if (current.start < other.end && current.end > other.start) {
+                        // Prioritize code over bold
+                        if (current.type === 'code' && other.type === 'bold') {
+                            toRemove.add(j);
+                        } else if (current.type === 'bold' && other.type === 'code') {
+                            toRemove.add(i);
+                            break; // Current is removed, no need to check further
+                        } else {
+                            // Same type overlapping - keep the first one
+                            toRemove.add(j);
+                        }
+                    }
+                }
+            }
+            
+            // Filter out removed matches
+            const filteredMatches = matches.filter((_, index) => !toRemove.has(index));
+            
+            // Build result array
+            filteredMatches.forEach(match => {
+                // Add text before match (handles case when match is at start of string)
+                if (match.start > lastIndex) {
+                    const beforeText = text.substring(lastIndex, match.start);
+                    if (beforeText) {
+                        parts.push(beforeText);
+                    }
+                }
+                
+                // Add formatted match (always add, even if content is empty to preserve structure)
+                if (match.type === 'code') {
+                    parts.push(
+                        <code key={keyCounter++} className="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200 rounded text-sm font-mono">
+                            {match.content}
+                        </code>
+                    );
+                } else if (match.type === 'bold') {
+                    parts.push(
+                        <strong key={keyCounter++} className="font-semibold text-slate-900 dark:text-slate-100">
+                            {match.content}
+                        </strong>
+                    );
+                }
+                
+                lastIndex = match.end;
+            });
+            
+            // Add remaining text (handles case when match is at end of string)
+            if (lastIndex < text.length) {
+                const remainingText = text.substring(lastIndex);
+                if (remainingText) {
+                    parts.push(remainingText);
+                }
+            }
+            
+            // Return formatted parts or original text if something went wrong
+            return parts.length > 0 ? parts : text;
+        };
+
         const renderBoldText = (text) => {
             const parts = text.split('**');
             return parts.map((part, idx) => 
@@ -127,7 +245,7 @@
             const fileRegex = /(spec\.md|plan\.md|tasks\.md|verify-report\.md)/g;
             const parts = text.split(fileRegex);
             if (parts.length === 1) {
-                return <span className="text-slate-600 dark:text-slate-400">{renderBoldText(text)}</span>;
+                return <span className="text-slate-600 dark:text-slate-400">{renderFormattedText(text)}</span>;
             }
             return (
                 <span className="text-slate-600 dark:text-slate-400">
@@ -143,7 +261,7 @@
                                 </button>
                             );
                         }
-                        return renderBoldText(part);
+                        return renderFormattedText(part);
                     })}
                 </span>
             );
@@ -174,15 +292,15 @@
                 if (inCodeBlock) { codeBlockContent.push(line); continue; }
                 if (line.startsWith('# ')) {
                     const h1Text = line.replace('# ', '');
-                    renderLines.push(<h1 key={i} className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-6 pb-2 border-b border-slate-200 dark:border-slate-700">{renderBoldText(h1Text)}</h1>);
+                    renderLines.push(<h1 key={i} className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-6 pb-2 border-b border-slate-200 dark:border-slate-700">{renderFormattedText(h1Text)}</h1>);
                 }
                 else if (line.startsWith('## ')) {
                     const h2Text = line.replace('## ', '');
-                    renderLines.push(<h2 key={i} className="text-lg font-bold text-slate-800 dark:text-slate-200 mt-8 mb-3 flex items-center gap-2">{renderBoldText(h2Text)}</h2>);
+                    renderLines.push(<h2 key={i} className="text-lg font-bold text-slate-800 dark:text-slate-200 mt-8 mb-3 flex items-center gap-2">{renderFormattedText(h2Text)}</h2>);
                 }
                 else if (line.startsWith('### ')) {
                     const h3Text = line.replace('### ', '');
-                    renderLines.push(<h3 key={i} className="text-md font-semibold text-slate-700 dark:text-slate-300 mt-6 mb-2">{renderBoldText(h3Text)}</h3>);
+                    renderLines.push(<h3 key={i} className="text-md font-semibold text-slate-700 dark:text-slate-300 mt-6 mb-2">{renderFormattedText(h3Text)}</h3>);
                 }
                 else if (line.trim().startsWith('- [ ]') || line.trim().startsWith('- [x]')) {
                     const isChecked = line.trim().startsWith('- [x]');
@@ -193,7 +311,7 @@
                                 {isChecked && <Check size={12} strokeWidth={3} />}
                             </div>
                             <span className={`${isChecked ? 'text-slate-400 dark:text-slate-500 line-through' : 'text-slate-700 dark:text-slate-300'}`}>
-                                {renderBoldText(text)}
+                                {renderFormattedText(text)}
                             </span>
                         </div>
                     );
@@ -202,7 +320,7 @@
                     const listText = line.replace('- ', '');
                     renderLines.push(
                         <li key={i} className="ml-5 list-disc text-slate-700 dark:text-slate-300 pl-1">
-                            {renderBoldText(listText)}
+                            {renderFormattedText(listText)}
                         </li>
                     );
                 }
@@ -212,7 +330,7 @@
                         renderLines.push(
                             <div key={i} className="ml-5 text-slate-700 dark:text-slate-300 flex gap-2">
                                 <span className="font-mono text-slate-400 dark:text-slate-500 font-bold w-4 text-right">{numMatch[1]}.</span>
-                                <span>{renderBoldText(numMatch[2])}</span>
+                                <span>{renderFormattedText(numMatch[2])}</span>
                             </div>
                         );
                     }
@@ -287,6 +405,26 @@
             );
         };
 
+        const PreviewText = ({ content, maxLength = 150 }) => {
+            if (!content) return <span>No description</span>;
+            
+            // Extract first paragraph, remove headers and code blocks
+            const lines = content.split('\n');
+            let previewText = '';
+            for (let i = 0; i < lines.length && previewText.length < maxLength; i++) {
+                const line = lines[i].trim();
+                if (line && !line.startsWith('#') && !line.startsWith('```') && !line.startsWith('- [') && !line.startsWith('- ')) {
+                    previewText += (previewText ? ' ' : '') + line;
+                }
+            }
+            
+            if (previewText.length > maxLength) {
+                previewText = previewText.substring(0, maxLength) + '...';
+            }
+            
+            return <span>{renderFormattedText(previewText || 'No description')}</span>;
+        };
+
         const Dashboard = ({ features, onSelectFeature }) => {
             return (
                 <div className="p-8 max-w-6xl mx-auto">
@@ -304,6 +442,7 @@
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {features.map(feature => {
                                 const progress = calculateProgress(feature.files);
+                                const specFile = feature.files.find(f => f.type === 'spec');
                                 return (
                                     <div key={feature.id} onClick={() => onSelectFeature(feature.id)} 
                                          className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm hover:shadow-md hover:border-blue-300 dark:hover:border-blue-600 transition-all cursor-pointer group flex flex-col h-full">
@@ -317,7 +456,7 @@
                                         
                                         <div className="flex-1">
                                             <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 line-clamp-2">
-                                                {feature.files.find(f => f.type === 'spec')?.content.slice(0, 100).replace(/#/g, '') || 'No description'}...
+                                                <PreviewText content={specFile?.content} maxLength={150} />
                                             </p>
                                         </div>
 
