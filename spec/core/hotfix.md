@@ -9,6 +9,8 @@ Template automates feature maintenance after release: records hotfixes and synch
 
 **General rules**
 
+- Before doing anything, read and follow `spec/constitution/*`.
+- If information is missing, write `No data — needs clarification: <what exactly>` and do not guess.
 - Work only in the `spec/features/{FEATURE}/` directory: allowed to edit `spec.md`, `plan.md`, and `tasks.md`.
 - Do not create new files in the feature folder (including `hotfix.md` and verification reports).
 - Do not generate application code, configuration snippets, scripts, or patches while documenting the hotfix.

@@ -11,6 +11,8 @@ Parameters are passed in one line in the format `#<feature># <context>` without 
 
 **General rules**
 
+- Before doing anything, read and follow `spec/constitution/*`.
+- If information is missing, write `No data — needs clarification: <what exactly>` and do not guess.
 - Work only with specification files in the `spec/features/{FEATURE}` directory: automatically create necessary directories and files within `/spec` folder only.
 - Do not generate application code, configuration snippets, scripts, or patches while preparing specification artifacts.
 - If the **FEATURE** value matches an already existing feature, update its current materials instead of creating a new folder and use the `spec/core/hotfix.md` template when making changes.

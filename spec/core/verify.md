@@ -9,6 +9,8 @@ Template helps format the results of automatic task execution verification and m
 
 **General rules**
 
+- Before doing anything, read and follow `spec/constitution/*`.
+- If information is missing, write `No data — needs clarification: <what exactly>` and do not guess.
 - Work only with specification files: do not create code and new directories.
 - Do not generate application code, configuration snippets, scripts, or patches during verification.
 - **REQUIRED:** Always create `spec/features/{FEATURE}/verify-report.md` file as the main output of verification process.
@@ -23,6 +25,7 @@ Template helps format the results of automatic task execution verification and m
 - `## Task verification results` — list of verified tasks with final status and links to supporting artifacts/proofs.
 - `## Discrepancy log` — brief summary of new entries added to `verify-report.md`, with steps to resolve problems.
 - `## Archiving decision` — final status of verify launch: moving feature to `spec/archived/{FEATURE}` or list of actions for re-verification.
+- Constitution compliance — verify that `tasks.md` includes the Constitution checkbox, and that its status matches the changes introduced by the feature. If it should be updated but was not, record a discrepancy.
 
 **Steps**
 

@@ -9,6 +9,8 @@ Template helps form a task list for feature implementation in the **spec-feature
 
 **General rules**
 
+- Before doing anything, read and follow `spec/constitution/*`.
+- If information is missing, write `No data — needs clarification: <what exactly>` and do not guess.
 - Work only with specification files within `/spec` directory: automatically create necessary directories and files.
 - Do not generate application code, configuration snippets, scripts, or patches while preparing the task list.
 - Use `spec/core/spec.md` and `spec/core/plan.md` as base sources of specification and plan when preparing tasks.
@@ -46,6 +48,7 @@ Template helps form a task list for feature implementation in the **spec-feature
 ## Supporting tasks
 
 - [ ] Documentation: update relevant instructions and descriptions.
+- [ ] Constitution: update `spec/constitution/*` if this feature introduced a new invariant, workflow constraint, or quality gate. If not required — reason: <explanation>.
 - [ ] Observability: add or clarify metrics, alerts, and/or logging.
 - [ ] Code review and PR: prepare changes for review and accompanying information.
 
@@ -54,6 +57,7 @@ Template helps form a task list for feature implementation in the **spec-feature
 - [ ] All tasks are completed and tested.
 - [ ] Relevant unit/e2e/integration tests pass successfully.
 - [ ] Documentation and operational instructions are updated.
+- [ ] Constitution compliance is checked and `spec/constitution/*` is updated if required (otherwise explicitly marked as not required with a reason).
 - [ ] `/spec/core/verify.md` is executed after completing all tasks to verify the task list.
 
 ```

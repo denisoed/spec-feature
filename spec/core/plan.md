@@ -9,6 +9,8 @@ Template helps format the feature implementation plan in the **spec-feature** pr
 
 **General rules**
 
+- Before doing anything, read and follow `spec/constitution/*`.
+- If information is missing, write `No data — needs clarification: <what exactly>` and do not guess.
 - Work only with specification files within `/spec` directory: automatically create necessary directories and files.
 - Do not generate application code, configuration snippets, scripts, or patches while preparing the implementation plan.
 - Use `spec/core/spec.md` as the specification source on which the plan is formed.
