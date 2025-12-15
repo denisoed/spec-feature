@@ -30,21 +30,29 @@ graph TD
     A --> C[feature.md]
     A --> D[core/]
     A --> E[features/]
+    A --> F[constitution/]
     
-    D --> F[spec.md]
-    D --> G[plan.md]
-    D --> H[tasks.md]
-    D --> I[verify.md]
-    D --> J[hotfix.md]
+    D --> G[spec.md]
+    D --> H[plan.md]
+    D --> I[tasks.md]
+    D --> J[verify.md]
+    D --> K[hotfix.md]
     
-    E --> K[user-auth/]
-    K --> L[spec.md]
-    K --> M[plan.md]
-    K --> N[tasks.md]
-    K --> O[verify-report.md]
+    E --> L[user-auth/]
+    L --> M[spec.md]
+    L --> N[plan.md]
+    L --> O[tasks.md]
+    L --> P[verify-report.md]
 ```
 
 **Templates** (core/) → **Features** (features/)
+
+## 🧭 Constitution
+
+- `spec/constitution/` stores project rules and constraints for humans and AI.
+- Before changes, read `spec/constitution/README.md` and all files in the folder.
+- Conflict order: Constitution > feature specs > plans > tasks.
+- Add or update Constitution documents when a new invariant requirement appears.
 
 ## 🎬 Workflow
 
