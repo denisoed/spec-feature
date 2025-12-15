@@ -33,15 +33,15 @@ Template collects all clarifying questions for a feature in the **spec-feature**
 
 ## Open questions
 
-| # | Question | Options / suggested default | User answer | Status |
-|---|----------|----------------------------|------------|--------|
-| 1 | <question> | <options or default> | <fill in> | open |
+### 1. <question>
+- **Options / suggested default:** <options or default>
+- **User answer:** <fill in>
 
 ## Resolved decisions
 
-| # | Decision | Rationale | Source question |
-|---|----------|-----------|-----------------|
-| 1 | <decision> | <why> | #1 |
+### 1. <decision>
+- **Rationale:** <why>
+- **Source question:** #1
 ```
 
 Write strictly in Markdown and automatically create/update the clarifications file. **Goal** — create/update file `/spec/features/{FEATURE}/clarifications.md` to capture all clarifying questions and user answers for this feature.
