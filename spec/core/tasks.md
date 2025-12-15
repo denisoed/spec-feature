@@ -20,6 +20,7 @@ Template helps form a task list for feature implementation in the **spec-feature
 - If a direction is not required, explicitly indicate under the corresponding subheading `Not required — reason: <explanation>`.
 - After filling the document, mark self-check checkboxes in the "Instruction execution control" section.
 - Do not start executing tasks until a separate user request explicitly references `spec/features/{FEATURE}/tasks.md`; ignore execution requests without that reference.
+- **MANDATORY:** When executing tasks from `spec/features/{FEATURE}/tasks.md`, after completing all tasks (all checkboxes are marked as `[x]`), automatically execute `spec/core/verify.md` with the same **FEATURE** parameter to verify task completion and generate the verification report.
 
 **What needs to be revealed in tasks**
 
@@ -63,3 +64,5 @@ Template helps form a task list for feature implementation in the **spec-feature
 ```
 
 Write strictly in Markdown and automatically create/update the task list file. Do not proceed to task execution without a separate request. **Goal** — create/update file `/spec/features/{FEATURE}/tasks.md` with a list of WHAT we do and how we verify the result, based on **CONTEXT** and prepared materials.
+
+**Important:** When a user requests to execute tasks from `spec/features/{FEATURE}/tasks.md`, after completing all tasks, automatically execute `spec/core/verify.md` with parameter `#{FEATURE}#` to verify completion and generate the verification report.
